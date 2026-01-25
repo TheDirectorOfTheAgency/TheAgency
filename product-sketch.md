@@ -98,18 +98,53 @@ Each module has:
 
 ---
 
-## Tier Structure
+## The Ecosystem (Full Vision)
 
-| Tier | Name | Price | What's Included |
-|------|------|-------|-----------------|
-| 1 | DIY | $79-149/mo | Full software, AI assistant, all modules |
-| 2 | Assisted | $500-1000 one-time | Software + 1:1 setup call + async support for 30 days |
-| 3 | Coaching | $2,000-5,000 | 6-week program, weekly calls, accountability, done-with-you |
+The software is just one piece. The full ecosystem:
 
-Optional add-ons:
-- "Done for you" website buildout
-- Google Ads management
-- Ongoing monthly coaching calls
+### Tier 1: The Software ($29-49/mo)
+**"My brain downloaded into AI"**
+- For people who can't afford high-ticket coaching
+- AI acts as their coach, powered by your knowledge
+- Self-paced, scalable, accessible
+- The funnel that feeds everything else
+
+### Tier 2: Group Coaching ($2,000-5,000)
+- 6-8 week program
+- Weekly group calls
+- Accountability and community
+- For people who want more structure and access
+
+### Tier 3: 1:1 Coaching ($5,000-15,000+)
+- Direct access to you
+- Custom strategy
+- Done-with-you implementation
+- Limited spots
+
+### Tier 4: The Agency Live ($10,000-25,000+)
+**The premium in-person experience in Minneapolis**
+
+Part business intensive, part adventure:
+- 2-3 day immersive experience
+- Build out their website, GBP, Google Ads together
+- James Bond / spy-themed experience
+- Activities: shooting range, skydiving, flight lessons, etc.
+- Leave with systems fully built + unforgettable memories
+
+This is the "bucket list" tier. People talk about it, share it, it becomes marketing itself.
+
+*Positioning: "Come to Minneapolis. Build your empire. Have the adventure of a lifetime."*
+
+---
+
+## Why This Ecosystem Works
+
+1. **Software** captures the masses, generates recurring revenue, builds audience
+2. **Group coaching** converts serious people at mid-ticket
+3. **1:1 coaching** is high-margin, low-volume
+4. **The Agency Live** is the flagship - premium pricing, incredible experience, word-of-mouth machine
+
+Everyone enters through the software. The best ones ascend.
 
 ---
 
@@ -169,6 +204,14 @@ Three tiers with clear differentiation
 ---
 
 ## Name Ideas
+
+**"The Agency" theme (ties into the James Bond / spy vibe):**
+- The Agency
+- The Agency HQ
+- Agency Growth
+- Your Growth Agency
+
+**Other options:**
 - GrowLocal
 - TradeScale
 - ServiceGrowth
@@ -177,6 +220,8 @@ Three tiers with clear differentiation
 - Tradesman's Edge
 - HomeService OS
 - Contractor Growth System
+
+*Note: "The Agency" has legs - it works for the software AND the live experience. "Join The Agency" → "Come to The Agency Live"*
 
 ---
 
