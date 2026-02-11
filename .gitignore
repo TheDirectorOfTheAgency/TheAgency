@@ -10,3 +10,6 @@ build/
 
 # Analysis output (may contain business data)
 analysis_results.json
+
+# Data files (may contain sensitive business data)
+data/
