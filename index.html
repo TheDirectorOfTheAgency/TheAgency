@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Malia's Shop Builder! 🏪</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+    :root {
+      --pink: #ff6eb4;
+      --purple: #a855f7;
+      --yellow: #fbbf24;
+      --green: #34d399;
+      --blue: #60a5fa;
+      --orange: #fb923c;
+      --red: #f87171;
+      --bg: #fff9f0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ===== STARS BACKGROUND ===== */
+    .stars {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background: linear-gradient(135deg, #fff0fb 0%, #f0f4ff 50%, #fffbeb 100%);
+    }
+    .stars::before {
+      content: '⭐✨🌟💫⭐✨🌟💫⭐✨🌟💫⭐✨🌟💫';
+      position: absolute; top: -10px; left: 0; right: 0;
+      font-size: 1.5rem; opacity: 0.15; letter-spacing: 2rem;
+      animation: scroll-stars 20s linear infinite;
+      white-space: nowrap;
+    }
+    @keyframes scroll-stars {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ===== SCREENS ===== */
+    .screen {
+      display: none; position: relative; z-index: 1;
+      min-height: 100vh; padding: 20px;
+      justify-content: center; align-items: center; flex-direction: column;
+    }
+    .screen.active { display: flex; }
+
+    /* ===== HEADER ===== */
+    .game-header {
+      text-align: center; margin-bottom: 30px;
+    }
+    .game-header h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      background: linear-gradient(135deg, var(--pink), var(--purple), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      line-height: 1.2;
+    }
+    .game-header p {
+      font-size: 1.2rem; color: #7c5c9a; font-weight: 600; margin-top: 8px;
+    }
+
+    /* ===== CARD ===== */
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 8px 32px rgba(168,85,247,0.15);
+      width: 100%; max-width: 700px;
+      border: 3px solid transparent;
+      background-clip: padding-box;
+      position: relative;
+    }
+    .card::before {
+      content: '';
+      position: absolute; inset: -3px;
+      border-radius: 27px;
+      background: linear-gradient(135deg, var(--pink), var(--purple), var(--blue));
+      z-index: -1;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 28px;
+      border-radius: 50px;
+      border: none; cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.1rem; font-weight: 800;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn:active { transform: scale(0.96); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      color: white;
+      box-shadow: 0 4px 15px rgba(168,85,247,0.4);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(168,85,247,0.5); }
+    .btn-success {
+      background: linear-gradient(135deg, var(--green), #059669);
+      color: white;
+      box-shadow: 0 4px 15px rgba(52,211,153,0.4);
+    }
+    .btn-success:hover { transform: translateY(-2px); }
+    .btn-outline {
+      background: white; color: var(--purple);
+      border: 3px solid var(--purple);
+    }
+    .btn-outline:hover { background: #f5f0ff; }
+
+    /* ===== INPUT ===== */
+    .fancy-input {
+      width: 100%;
+      padding: 16px 20px;
+      border-radius: 16px;
+      border: 3px solid #e0d0ff;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.3rem; font-weight: 700;
+      text-align: center;
+      color: var(--purple);
+      background: #fdf8ff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .fancy-input:focus { border-color: var(--purple); }
+    .fancy-input::placeholder { color: #d0b0f0; }
+
+    /* ===== SECTION GRID ===== */
+    .section-label {
+      font-size: 1.1rem; font-weight: 800; color: #6b4d8a; margin-bottom: 16px;
+    }
+    .sections-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+    }
+    .section-tile {
+      position: relative;
+      background: #faf5ff;
+      border: 3px solid #e0d0ff;
+      border-radius: 18px;
+      padding: 16px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .section-tile:hover { transform: translateY(-3px); border-color: var(--purple); }
+    .section-tile.selected {
+      background: linear-gradient(135deg, #fdf0ff, #f0e0ff);
+      border-color: var(--purple);
+      box-shadow: 0 4px 12px rgba(168,85,247,0.25);
+    }
+    .section-tile .check {
+      display: none;
+      position: absolute; top: -8px; right: -8px;
+      background: var(--green); color: white;
+      border-radius: 50%; width: 24px; height: 24px;
+      font-size: 0.8rem; align-items: center; justify-content: center;
+    }
+    .section-tile.selected .check { display: flex; }
+    .section-tile .emoji { font-size: 2.4rem; line-height: 1; display: block; margin-bottom: 6px; }
+    .section-tile .name { font-size: 0.8rem; font-weight: 800; color: #6b4d8a; line-height: 1.2; }
+
+    /* ===== QUANTITY CONTROLS ===== */
+    .qty-row {
+      display: flex; align-items: center; gap: 8px;
+      background: #f5f0ff; border-radius: 14px; padding: 10px 14px;
+      margin-bottom: 8px;
+    }
+    .qty-emoji { font-size: 1.6rem; flex-shrink: 0; }
+    .qty-name { font-weight: 700; color: #6b4d8a; flex: 1; font-size: 0.95rem; }
+    .qty-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%; border: none; cursor: pointer;
+      font-size: 1.2rem; font-weight: 900; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .qty-btn:active { transform: scale(0.9); }
+    .qty-minus { background: #ffd0e8; color: #d63384; }
+    .qty-minus:hover { background: #ffb0d8; }
+    .qty-plus { background: #d0f0e0; color: #059669; }
+    .qty-plus:hover { background: #b0e8d0; }
+    .qty-value {
+      min-width: 36px; text-align: center;
+      font-size: 1.2rem; font-weight: 900; color: var(--purple);
+    }
+
+    /* ===== WORKER SECTION ===== */
+    .worker-picker {
+      text-align: center;
+    }
+    .worker-count-display {
+      font-family: 'Fredoka One', cursive;
+      font-size: 4rem; color: var(--purple); line-height: 1;
+      margin: 10px 0;
+    }
+    .worker-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 12px;
+      border-radius: 6px;
+      background: linear-gradient(to right, var(--purple) 0%, #e0d0ff 0%);
+      outline: none;
+      margin: 16px 0;
+    }
+    .worker-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(168,85,247,0.4);
+    }
+    .worker-emojis {
+      font-size: 1.6rem; letter-spacing: 2px;
+      min-height: 48px; line-height: 1.5;
+      word-break: break-all;
+    }
+    .badge-picker {
+      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+      margin-top: 16px;
+    }
+    .badge-option {
+      padding: 10px 18px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 0.9rem; font-weight: 800;
+      border: 3px solid transparent;
+      transition: all 0.2s;
+      color: white;
+    }
+    .badge-option:hover { transform: scale(1.05); }
+    .badge-option.active { border-color: #333; box-shadow: 0 0 0 3px rgba(0,0,0,0.2); }
+
+    /* ===== STORE PREVIEW ===== */
+    .store-preview {
+      width: 100%; max-width: 800px;
+    }
+    .store-building {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+    .store-sign {
+      padding: 24px;
+      text-align: center;
+      color: white;
+    }
+    .store-sign h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    .store-sign p { font-size: 1rem; opacity: 0.9; font-weight: 600; }
+    .store-floor {
+      padding: 24px;
+      background: #fdf8ff;
+    }
+    .floor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
+    }
+    .floor-section {
+      background: white;
+      border-radius: 16px;
+      padding: 14px 10px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border: 2px solid #f0e0ff;
+      animation: pop-in 0.4s ease backwards;
+    }
+    @keyframes pop-in {
+      from { opacity: 0; transform: scale(0.7) rotate(-5deg); }
+      to { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+    .floor-section .sec-emoji { font-size: 2rem; display: block; margin-bottom: 4px; }
+    .floor-section .sec-name { font-size: 0.75rem; font-weight: 800; color: #6b4d8a; }
+    .floor-section .sec-qty { font-size: 0.7rem; color: #a08ab0; font-weight: 600; }
+    .store-workers {
+      padding: 16px 24px;
+      background: #f0fdf4;
+      border-top: 2px dashed #c0f0d8;
+    }
+    .store-workers h3 {
+      font-size: 0.95rem; font-weight: 800; color: #059669; margin-bottom: 6px;
+    }
+    .store-workers .worker-row {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    }
+    .worker-badge-display {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 12px; border-radius: 50px;
+      font-size: 0.8rem; font-weight: 800; color: white;
+    }
+
+    /* ===== PROGRESS ===== */
+    .progress-bar {
+      width: 100%; max-width: 700px;
+      margin-bottom: 24px;
+    }
+    .progress-steps {
+      display: flex; gap: 8px; justify-content: center;
+    }
+    .step-dot {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: #e0d0ff;
+      transition: all 0.3s;
+    }
+    .step-dot.done { background: var(--green); }
+    .step-dot.active {
+      background: var(--purple);
+      box-shadow: 0 0 0 4px rgba(168,85,247,0.3);
+      transform: scale(1.3);
+    }
+
+    /* ===== CONFETTI ===== */
+    .confetti-piece {
+      position: fixed;
+      width: 12px; height: 12px;
+      border-radius: 2px;
+      animation: confetti-fall 3s ease-in forwards;
+      z-index: 9999;
+      pointer-events: none;
+    }
+    @keyframes confetti-fall {
+      0%   { transform: translateY(-20px) rotate(0deg) scale(1); opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg) scale(0.5); opacity: 0; }
+    }
+
+    /* ===== WELCOME SCREEN ===== */
+    .welcome-emojis {
+      font-size: 4rem; margin: 20px 0; text-align: center;
+      animation: bounce 1s ease infinite alternate;
+    }
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-12px); }
+    }
+    .welcome-subtitle {
+      font-size: 1.1rem; color: #9b7ac4; text-align: center; margin-bottom: 30px;
+      font-weight: 700; line-height: 1.5;
+    }
+
+    /* ===== SCROLLABLE LIST ===== */
+    .qty-list { max-height: 340px; overflow-y: auto; padding-right: 4px; }
+    .qty-list::-webkit-scrollbar { width: 6px; }
+    .qty-list::-webkit-scrollbar-track { background: #f0e0ff; border-radius: 3px; }
+    .qty-list::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 3px; }
+
+    /* ===== HELPERS ===== */
+    .text-center { text-align: center; }
+    .mt-16 { margin-top: 16px; }
+    .mt-24 { margin-top: 24px; }
+    .gap-12 { gap: 12px; }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .w-full { width: 100%; }
+    .label {
+      font-size: 0.9rem; font-weight: 800; color: #9b7ac4;
+      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;
+    }
+    .emoji-big { font-size: 3rem; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 500px) {
+      .card { padding: 20px; }
+      .sections-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<!-- ======= SCREEN 1: WELCOME ======= -->
+<div class="screen active" id="screen-welcome">
+  <div class="game-header">
+    <h1>Malia's Shop Builder! 🏪</h1>
+    <p>Build your very own dream store!</p>
+  </div>
+  <div class="card text-center">
+    <div class="welcome-emojis">🛍️🌟🏪</div>
+    <p class="welcome-subtitle">
+      Pick what goes in your store, how many workers,<br>
+      and make it totally YOURS! 💖
+    </p>
+    <button class="btn btn-primary" style="font-size:1.3rem; padding:18px 40px;" onclick="goTo('screen-name')">
+      Let's Build! 🚀
+    </button>
+  </div>
+</div>
+
+<!-- ======= SCREEN 2: NAME YOUR STORE ======= -->
+<div class="screen" id="screen-name">
+  <div class="progress-bar">
+    <div class="progress-steps">
+      <div class="step-dot active" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+      <div class="step-dot" id="dot-4"></div>
+    </div>
+  </div>
+  <div class="game-header">
+    <h1>Name Your Store! ✏️</h1>
+    <p>Step 1 of 4 — What should we call it?</p>
+  </div>
+  <div class="card">
+    <div class="emoji-big text-center" style="margin-bottom:16px;">🏪</div>
+    <div class="label text-center">Type your store name here:</div>
+    <input
+      class="fancy-input"
+      id="store-name-input"
+      type="text"
+      placeholder="e.g. Malia's Mega Store"
+      maxlength="30"
+      onkeyup="updateStoreName()"
+    />
+    <div class="mt-16 label text-center">Pick a store color:</div>
+    <div class="flex mt-16 gap-12" style="justify-content:center; flex-wrap:wrap;">
+      <div class="color-swatch" onclick="selectColor('#ff6eb4','#d63384','Color Swatch')" data-color="#ff6eb4"
+        style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#ff6eb4,#d63384);cursor:pointer;border:4px solid transparent;transition:all 0.2s;"></div>
+      <div class="color-swatch" onclick="selectColor('#a855f7','#7c3aed','Color Swatch')" data-color="#a855f7"
+        style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#7c3aed);cursor:pointer;border:4px solid transparent;transition:all 0.2s;"></div>
+      <div class="color-swatch" onclick="selectColor('#60a5fa','#2563eb','Color Swatch')" data-color="#60a5fa"
+        style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#2563eb);cursor:pointer;border:4px solid transparent;transition:all 0.2s;"></div>
+      <div class="color-swatch" onclick="selectColor('#fb923c','#ea580c','Color Swatch')" data-color="#fb923c"
+        style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#fb923c,#ea580c);cursor:pointer;border:4px solid transparent;transition:all 0.2s;"></div>
+      <div class="color-swatch" onclick="selectColor('#34d399','#059669','Color Swatch')" data-color="#34d399"
+        style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#34d399,#059669);cursor:pointer;border:4px solid transparent;transition:all 0.2s;"></div>
+      <div class="color-swatch" onclick="selectColor('#fbbf24','#d97706','Color Swatch')" data-color="#fbbf24"
+        style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#d97706);cursor:pointer;border:4px solid transparent;transition:all 0.2s;"></div>
+    </div>
+    <div class="mt-24 text-center">
+      <button class="btn btn-primary" onclick="goToSections()">
+        Next: Pick Your Sections! ➡️
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ======= SCREEN 3: PICK SECTIONS ======= -->
+<div class="screen" id="screen-sections">
+  <div class="progress-bar">
+    <div class="progress-steps">
+      <div class="step-dot done" id="dot-s1"></div>
+      <div class="step-dot active" id="dot-s2"></div>
+      <div class="step-dot" id="dot-s3"></div>
+      <div class="step-dot" id="dot-s4"></div>
+    </div>
+  </div>
+  <div class="game-header">
+    <h1>Pick Your Sections! 🛒</h1>
+    <p>Step 2 of 4 — Tap everything you want in your store!</p>
+  </div>
+  <div class="card">
+    <div id="sections-grid" class="sections-grid"></div>
+    <div class="mt-24 flex gap-12" style="justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-outline" onclick="goTo('screen-name')">⬅️ Back</button>
+      <button class="btn btn-primary" onclick="goToQuantities()">Next: How Many? ➡️</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======= SCREEN 4: QUANTITIES ======= -->
+<div class="screen" id="screen-quantities">
+  <div class="progress-bar">
+    <div class="progress-steps">
+      <div class="step-dot done"></div>
+      <div class="step-dot done"></div>
+      <div class="step-dot active"></div>
+      <div class="step-dot"></div>
+    </div>
+  </div>
+  <div class="game-header">
+    <h1>How Many of Each? 🔢</h1>
+    <p>Step 3 of 4 — Use + and - to choose!</p>
+  </div>
+  <div class="card">
+    <div id="qty-list" class="qty-list"></div>
+    <div class="mt-24 flex gap-12" style="justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-outline" onclick="goTo('screen-sections')">⬅️ Back</button>
+      <button class="btn btn-primary" onclick="goTo('screen-workers')">Next: Your Workers! ➡️</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======= SCREEN 5: WORKERS ======= -->
+<div class="screen" id="screen-workers">
+  <div class="progress-bar">
+    <div class="progress-steps">
+      <div class="step-dot done"></div>
+      <div class="step-dot done"></div>
+      <div class="step-dot done"></div>
+      <div class="step-dot active"></div>
+    </div>
+  </div>
+  <div class="game-header">
+    <h1>Pick Your Workers! 👷</h1>
+    <p>Step 4 of 4 — How many helpers does your store need?</p>
+  </div>
+  <div class="card">
+    <div class="worker-picker">
+      <div class="label">Number of Workers:</div>
+      <div class="worker-count-display" id="worker-count-display">5</div>
+      <input
+        type="range" min="1" max="20" value="5"
+        class="worker-slider" id="worker-slider"
+        oninput="updateWorkers(this.value)"
+      />
+      <div class="worker-emojis" id="worker-emojis">👷👷👷👷👷</div>
+      <div class="mt-16 label">Worker Badge Color:</div>
+      <div class="badge-picker" id="badge-picker">
+        <div class="badge-option active" style="background:#2563eb;" onclick="selectBadge(this,'#2563eb')">💙 Blue</div>
+        <div class="badge-option" style="background:#d63384;" onclick="selectBadge(this,'#d63384')">💗 Pink</div>
+        <div class="badge-option" style="background:#059669;" onclick="selectBadge(this,'#059669')">💚 Green</div>
+        <div class="badge-option" style="background:#d97706;" onclick="selectBadge(this,'#d97706')">🧡 Orange</div>
+        <div class="badge-option" style="background:#7c3aed;" onclick="selectBadge(this,'#7c3aed')">💜 Purple</div>
+        <div class="badge-option" style="background:#dc2626;" onclick="selectBadge(this,'#dc2626')">❤️ Red</div>
+      </div>
+    </div>
+    <div class="mt-24 flex gap-12" style="justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-outline" onclick="goTo('screen-quantities')">⬅️ Back</button>
+      <button class="btn btn-success" onclick="openStore()">🎉 Open My Store!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======= SCREEN 6: YOUR STORE ======= -->
+<div class="screen" id="screen-store">
+  <div class="game-header">
+    <h1 id="final-title">Your Store is Open! 🎉</h1>
+    <p>Look at what YOU built!</p>
+  </div>
+  <div class="store-preview">
+    <div class="store-building">
+      <div class="store-sign" id="store-sign">
+        <h2 id="store-sign-name">My Store</h2>
+        <p id="store-sign-tagline">Grand Opening Today! 🎊</p>
+      </div>
+      <div class="store-floor">
+        <div style="font-size:0.85rem;font-weight:800;color:#9b7ac4;margin-bottom:12px;">📦 STORE SECTIONS</div>
+        <div class="floor-grid" id="floor-grid"></div>
+      </div>
+      <div class="store-workers">
+        <h3>👷 YOUR TEAM</h3>
+        <div class="worker-row">
+          <div class="worker-badge-display" id="worker-badge-display">
+            <!-- filled by JS -->
+          </div>
+          <span style="font-size:1.2rem;" id="worker-emoji-row"></span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-24 flex gap-12" style="justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-outline" onclick="goTo('screen-workers')">✏️ Edit Store</button>
+      <button class="btn btn-primary" onclick="resetGame()">🏪 Build a New Store!</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== STATE =====
+  const state = {
+    storeName: "Malia's Store",
+    storeColor1: '#ff6eb4',
+    storeColor2: '#d63384',
+    sections: {},     // id -> quantity
+    workers: 5,
+    badgeColor: '#2563eb',
+  };
+
+  // ===== SECTION CATALOG =====
+  const SECTIONS = [
+    { id: 'drinks',    emoji: '🥤', name: 'Drinks' },
+    { id: 'starbucks', emoji: '☕', name: 'Starbucks' },
+    { id: 'food',      emoji: '🍔', name: 'Food' },
+    { id: 'water',     emoji: '💧', name: 'Water' },
+    { id: 'squishies', emoji: '🧸', name: 'Squishies' },
+    { id: 'books',     emoji: '📚', name: 'Books' },
+    { id: 'library',   emoji: '🏛️', name: 'Library' },
+    { id: 'applestore',emoji: '🍎', name: 'Apple Store' },
+    { id: 'toys',      emoji: '🎮', name: 'Toys' },
+    { id: 'clothes',   emoji: '👗', name: 'Clothes' },
+    { id: 'shoes',     emoji: '👟', name: 'Shoes' },
+    { id: 'candy',     emoji: '🍬', name: 'Candy' },
+    { id: 'icecream',  emoji: '🍦', name: 'Ice Cream' },
+    { id: 'flowers',   emoji: '🌸', name: 'Flowers' },
+    { id: 'pets',      emoji: '🐾', name: 'Pets' },
+    { id: 'makeup',    emoji: '💄', name: 'Beauty' },
+    { id: 'sports',    emoji: '⚽', name: 'Sports' },
+    { id: 'music',     emoji: '🎵', name: 'Music' },
+    { id: 'art',       emoji: '🎨', name: 'Art' },
+    { id: 'garden',    emoji: '🌻', name: 'Garden' },
+  ];
+
+  // ===== NAVIGATION =====
+  function goTo(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // ===== SCREEN 2: NAME =====
+  function updateStoreName() {
+    const val = document.getElementById('store-name-input').value.trim();
+    state.storeName = val || "Malia's Store";
+  }
+
+  function selectColor(c1, c2) {
+    state.storeColor1 = c1;
+    state.storeColor2 = c2;
+    document.querySelectorAll('.color-swatch').forEach(s => {
+      s.style.border = s.dataset.color === c1
+        ? '4px solid #333'
+        : '4px solid transparent';
+    });
+  }
+
+  function goToSections() {
+    updateStoreName();
+    // Set default color if none selected
+    if (!document.querySelector('.color-swatch[style*="solid #333"]')) {
+      selectColor('#ff6eb4', '#d63384');
+    }
+    buildSectionsGrid();
+    goTo('screen-sections');
+  }
+
+  // ===== SCREEN 3: SECTIONS =====
+  function buildSectionsGrid() {
+    const grid = document.getElementById('sections-grid');
+    grid.innerHTML = '';
+    SECTIONS.forEach(sec => {
+      const isSelected = sec.id in state.sections;
+      const tile = document.createElement('div');
+      tile.className = 'section-tile' + (isSelected ? ' selected' : '');
+      tile.dataset.id = sec.id;
+      tile.innerHTML = `
+        <span class="check">✓</span>
+        <span class="emoji">${sec.emoji}</span>
+        <span class="name">${sec.name}</span>
+      `;
+      tile.onclick = () => toggleSection(sec.id, tile);
+      grid.appendChild(tile);
+    });
+  }
+
+  function toggleSection(id, tile) {
+    if (id in state.sections) {
+      delete state.sections[id];
+      tile.classList.remove('selected');
+    } else {
+      state.sections[id] = 5;
+      tile.classList.add('selected');
+    }
+  }
+
+  // ===== SCREEN 4: QUANTITIES =====
+  function goToQuantities() {
+    if (Object.keys(state.sections).length === 0) {
+      // Auto-select a few defaults if none chosen
+      ['drinks','food','squishies'].forEach(id => { state.sections[id] = 5; });
+    }
+    buildQtyList();
+    goTo('screen-quantities');
+  }
+
+  function buildQtyList() {
+    const list = document.getElementById('qty-list');
+    list.innerHTML = '';
+    const selected = SECTIONS.filter(s => s.id in state.sections);
+    if (selected.length === 0) {
+      list.innerHTML = '<p style="text-align:center;color:#9b7ac4;font-weight:700;">Go back and pick some sections! 👆</p>';
+      return;
+    }
+    selected.forEach(sec => {
+      const qty = state.sections[sec.id] || 5;
+      const row = document.createElement('div');
+      row.className = 'qty-row';
+      row.innerHTML = `
+        <span class="qty-emoji">${sec.emoji}</span>
+        <span class="qty-name">${sec.name}</span>
+        <button class="qty-btn qty-minus" onclick="changeQty('${sec.id}',-1)">−</button>
+        <span class="qty-value" id="qty-${sec.id}">${qty}</span>
+        <button class="qty-btn qty-plus" onclick="changeQty('${sec.id}',+1)">+</button>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  function changeQty(id, delta) {
+    state.sections[id] = Math.max(1, Math.min(99, (state.sections[id] || 5) + delta));
+    const el = document.getElementById('qty-' + id);
+    if (el) el.textContent = state.sections[id];
+    el.style.transform = 'scale(1.4)';
+    setTimeout(() => el.style.transform = 'scale(1)', 200);
+  }
+
+  // ===== SCREEN 5: WORKERS =====
+  function updateWorkers(val) {
+    state.workers = parseInt(val);
+    document.getElementById('worker-count-display').textContent = val;
+    // Update emoji row
+    const emojis = ['👷','🧑‍💼','👩‍💼','🧑‍🔧','👨‍🍳'];
+    let row = '';
+    for (let i = 0; i < state.workers; i++) {
+      row += emojis[i % emojis.length];
+    }
+    document.getElementById('worker-emojis').textContent = row;
+    // Update slider gradient
+    const slider = document.getElementById('worker-slider');
+    const pct = ((val - 1) / 19) * 100;
+    slider.style.background = `linear-gradient(to right, var(--purple) ${pct}%, #e0d0ff ${pct}%)`;
+  }
+
+  function selectBadge(el, color) {
+    state.badgeColor = color;
+    document.querySelectorAll('.badge-option').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // ===== SCREEN 6: OPEN STORE =====
+  function openStore() {
+    buildStorePreview();
+    goTo('screen-store');
+    launchConfetti();
+  }
+
+  function buildStorePreview() {
+    // Sign
+    const sign = document.getElementById('store-sign');
+    sign.style.background = `linear-gradient(135deg, ${state.storeColor1}, ${state.storeColor2})`;
+    document.getElementById('store-sign-name').textContent = state.storeName;
+    document.getElementById('final-title').textContent = `${state.storeName} is Open! 🎉`;
+
+    // Floor sections
+    const grid = document.getElementById('floor-grid');
+    grid.innerHTML = '';
+    const selected = SECTIONS.filter(s => s.id in state.sections);
+    selected.forEach((sec, i) => {
+      const div = document.createElement('div');
+      div.className = 'floor-section';
+      div.style.animationDelay = `${i * 0.08}s`;
+      div.innerHTML = `
+        <span class="sec-emoji">${sec.emoji}</span>
+        <div class="sec-name">${sec.name}</div>
+        <div class="sec-qty">${state.sections[sec.id]} items</div>
+      `;
+      grid.appendChild(div);
+    });
+
+    // Workers
+    const badge = document.getElementById('worker-badge-display');
+    badge.style.background = state.badgeColor;
+    badge.textContent = `📛 ${state.workers} Worker${state.workers > 1 ? 's' : ''}`;
+
+    const emojis = ['👷','🧑‍💼','👩‍💼','🧑‍🔧','👨‍🍳'];
+    let row = '';
+    for (let i = 0; i < Math.min(state.workers, 20); i++) {
+      row += emojis[i % emojis.length];
+    }
+    document.getElementById('worker-emoji-row').textContent = row;
+  }
+
+  // ===== CONFETTI =====
+  function launchConfetti() {
+    const colors = ['#ff6eb4','#a855f7','#60a5fa','#fbbf24','#34d399','#fb923c'];
+    const shapes = ['⭐','🌟','💖','✨','🎉','🎊','💜','🩷'];
+    for (let i = 0; i < 60; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        // Sometimes emoji, sometimes colored square
+        if (Math.random() > 0.5) {
+          el.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+          el.style.background = 'transparent';
+          el.style.fontSize = (Math.random() * 12 + 12) + 'px';
+          el.style.width = 'auto'; el.style.height = 'auto';
+        } else {
+          el.style.background = colors[Math.floor(Math.random() * colors.length)];
+          el.style.width = (Math.random() * 10 + 6) + 'px';
+          el.style.height = (Math.random() * 10 + 6) + 'px';
+        }
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        el.style.animationDelay = (Math.random() * 0.5) + 's';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 4000);
+      }, i * 40);
+    }
+  }
+
+  // ===== RESET =====
+  function resetGame() {
+    state.storeName = "Malia's Store";
+    state.storeColor1 = '#ff6eb4';
+    state.storeColor2 = '#d63384';
+    state.sections = {};
+    state.workers = 5;
+    state.badgeColor = '#2563eb';
+    document.getElementById('store-name-input').value = '';
+    document.querySelectorAll('.color-swatch').forEach(s => s.style.border = '4px solid transparent');
+    updateWorkers(5);
+    document.getElementById('worker-slider').value = 5;
+    goTo('screen-welcome');
+  }
+
+  // ===== INIT =====
+  selectColor('#ff6eb4', '#d63384');
+  updateWorkers(5);
+</script>
+</body>
+</html>
