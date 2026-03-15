@@ -29,7 +29,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 24px;
+      gap: 20px;
       background: linear-gradient(135deg, #ffe0f0 0%, #ffd6e7 50%, #e0f0ff 100%);
     }
     #screen-start h1 {
@@ -67,6 +67,64 @@
       color: #5a1a7a;
     }
 
+    /* Difficulty picker */
+    .difficulty-label {
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      color: #7c3a8a;
+      font-weight: bold;
+    }
+    .difficulty-cards {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 0 16px;
+    }
+    .diff-card {
+      background: rgba(255,255,255,0.85);
+      border: 3px solid #ffb3d9;
+      border-radius: 20px;
+      padding: 14px 20px;
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+      min-width: 110px;
+      box-shadow: 0 3px 10px rgba(200,0,100,0.12);
+    }
+    .diff-card:hover {
+      transform: scale(1.08) translateY(-3px);
+      box-shadow: 0 8px 20px rgba(200,0,100,0.22);
+    }
+    .diff-card:active { transform: scale(0.95); }
+    .diff-card.selected {
+      border-color: #c00060;
+      background: rgba(255,200,220,0.9);
+      box-shadow: 0 6px 18px rgba(200,0,100,0.3);
+    }
+    .diff-card .diff-icon { font-size: 2rem; display: block; margin-bottom: 4px; }
+    .diff-card .diff-name {
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: #c00060;
+      display: block;
+    }
+    .diff-card .diff-desc {
+      font-size: 0.72rem;
+      color: #888;
+      display: block;
+      margin-top: 3px;
+      line-height: 1.3;
+    }
+    #btn-start {
+      opacity: 0.4;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    #btn-start.ready {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
     /* ===== GAME SCREEN ===== */
     #screen-game {
       flex-direction: column;
@@ -96,6 +154,25 @@
     }
     .hud-item span {
       color: #c00060;
+    }
+    #hud-timer {
+      display: none;
+      font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+      font-weight: bold;
+      color: #5a1a7a;
+      background: rgba(255,255,255,0.6);
+      border-radius: 12px;
+      padding: 4px 12px;
+      transition: background 0.3s, color 0.3s;
+    }
+    #hud-timer.urgent {
+      background: #ffe0e0;
+      color: #cc0000;
+      animation: timerPulse 0.5s ease-in-out infinite alternate;
+    }
+    @keyframes timerPulse {
+      from { transform: scale(1); }
+      to   { transform: scale(1.1); }
     }
     #progress-bar-wrap {
       width: 100%;
@@ -293,6 +370,37 @@
       letter-spacing: 8px;
     }
 
+    /* ===== TIME'S UP SCREEN ===== */
+    #screen-timesup {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      background: linear-gradient(135deg, #ffe0e0 0%, #ffd6f0 100%);
+    }
+    #screen-timesup h2 {
+      font-size: clamp(2rem, 7vw, 3.5rem);
+      color: #c00060;
+      text-shadow: 3px 3px 0 #ffb3d9;
+      text-align: center;
+      animation: titleBounce 1.5s ease-in-out infinite;
+    }
+    #screen-timesup p {
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      color: #5a1a7a;
+      text-align: center;
+      padding: 0 20px;
+    }
+    .timesup-buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn-secondary {
+      background: linear-gradient(135deg, #b0b0b0, #888888) !important;
+    }
+
     /* ===== WIN SCREEN ===== */
     #screen-win {
       flex-direction: column;
@@ -416,6 +524,24 @@
       <div class="level-badge">⭐⭐⭐ Level 3 — 40 squishies</div>
       <div class="level-badge">🔥 Hardest — 50 squishies!</div>
     </div>
+    <p class="difficulty-label">Choose your difficulty:</p>
+    <div class="difficulty-cards">
+      <div class="diff-card" data-diff="easy">
+        <span class="diff-icon">🌸</span>
+        <span class="diff-name">Easy</span>
+        <span class="diff-desc">No time limit —<br>just have fun!</span>
+      </div>
+      <div class="diff-card" data-diff="medium">
+        <span class="diff-icon">⭐</span>
+        <span class="diff-name">Medium</span>
+        <span class="diff-desc">90 seconds<br>per level</span>
+      </div>
+      <div class="diff-card" data-diff="hard">
+        <span class="diff-icon">🔥</span>
+        <span class="diff-name">Hard</span>
+        <span class="diff-desc">45 seconds<br>per level!</span>
+      </div>
+    </div>
     <button id="btn-start">Let's Play! 🎉</button>
   </div>
 
@@ -424,6 +550,7 @@
     <div id="hud">
       <div class="hud-item">Level <span id="display-level">1</span></div>
       <div class="hud-item">⭐ Points: <span id="display-score">0</span> / <span id="display-target">30</span></div>
+      <div id="hud-timer">⏱️ <span id="display-timer">90</span>s</div>
       <div class="hud-item">🧺 <span id="display-basket-count">0</span></div>
       <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
     </div>
@@ -442,6 +569,17 @@
     <p id="levelup-msg">You collected <strong id="levelup-points">0</strong> points!</p>
     <div id="levelup-squishies-preview"></div>
     <button id="btn-next-level">Next Level! →</button>
+  </div>
+
+  <!-- TIME'S UP SCREEN -->
+  <div id="screen-timesup" class="screen">
+    <div style="font-size:4rem;">⏰</div>
+    <h2>Time's Up!</h2>
+    <p id="timesup-msg">You scored <strong id="timesup-points">0</strong> points on Level <strong id="timesup-level">1</strong>.<br>Keep trying — you've got this! 💪</p>
+    <div class="timesup-buttons">
+      <button id="btn-try-again">Try Again 🔄</button>
+      <button id="btn-timesup-menu" class="btn-secondary">Main Menu</button>
+    </div>
   </div>
 
   <!-- WIN SCREEN -->
@@ -468,6 +606,13 @@
       { id: 'needle',     label: 'Needle',     emoji: null,  points: 2, type: 'needle' },
     ];
 
+    // ===== DIFFICULTY CONFIG =====
+    const DIFFICULTY = {
+      easy:   { label: 'Easy',   timeLimit: null },
+      medium: { label: 'Medium', timeLimit: 90   },
+      hard:   { label: 'Hard',   timeLimit: 45   },
+    };
+
     // ===== LEVEL CONFIG =====
     const LEVELS = [
       { level: 1, squishyCount: 20, target: 30,  needlePct: 0.25 },
@@ -483,6 +628,9 @@
       basket: [],
       squishiesOnField: [],
       wonLevel: false,
+      difficulty: null,
+      timerInterval: null,
+      timeLeft: null,
     };
 
     // ===== DOM REFS =====
@@ -494,11 +642,70 @@
     const displayTarget  = document.getElementById('display-target');
     const displayBasket  = document.getElementById('display-basket-count');
     const progressBar    = document.getElementById('progress-bar');
+    const hudTimer       = document.getElementById('hud-timer');
+    const displayTimer   = document.getElementById('display-timer');
+
+    // ===== DIFFICULTY SELECTION =====
+    document.querySelectorAll('.diff-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.diff-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        state.difficulty = card.dataset.diff;
+        document.getElementById('btn-start').classList.add('ready');
+      });
+    });
 
     // ===== SCREEN SWITCH =====
     function screenSwitch(id) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
+    }
+
+    // ===== TIMER =====
+    function startTimer() {
+      clearTimer();
+      const diff = DIFFICULTY[state.difficulty];
+      if (!diff.timeLimit) {
+        hudTimer.style.display = 'none';
+        return;
+      }
+      state.timeLeft = diff.timeLimit;
+      hudTimer.style.display = 'block';
+      updateTimerDisplay();
+
+      state.timerInterval = setInterval(() => {
+        state.timeLeft--;
+        updateTimerDisplay();
+        if (state.timeLeft <= 0) {
+          clearTimer();
+          if (!state.wonLevel) {
+            onTimesUp();
+          }
+        }
+      }, 1000);
+    }
+
+    function clearTimer() {
+      if (state.timerInterval) {
+        clearInterval(state.timerInterval);
+        state.timerInterval = null;
+      }
+    }
+
+    function updateTimerDisplay() {
+      displayTimer.textContent = state.timeLeft;
+      if (state.timeLeft <= 10) {
+        hudTimer.classList.add('urgent');
+      } else {
+        hudTimer.classList.remove('urgent');
+      }
+    }
+
+    function onTimesUp() {
+      const lvl = LEVELS[state.currentLevel];
+      document.getElementById('timesup-points').textContent = state.score;
+      document.getElementById('timesup-level').textContent = lvl.level;
+      screenSwitch('screen-timesup');
     }
 
     // ===== INIT =====
@@ -508,6 +715,7 @@
       state.basket = [];
       state.squishiesOnField = [];
       state.wonLevel = false;
+      clearTimer();
       startLevel(0);
     }
 
@@ -516,6 +724,7 @@
       state.basket = [];
       state.squishiesOnField = [];
       state.wonLevel = false;
+      clearTimer();
 
       // Clear field
       playField.innerHTML = '';
@@ -528,6 +737,7 @@
 
       screenSwitch('screen-game');
       spawnSquishies(lvl.squishyCount, lvl.needlePct);
+      startTimer();
     }
 
     // ===== SPAWN SQUISHIES =====
@@ -646,6 +856,7 @@
       const lvl = LEVELS[state.currentLevel];
       if (state.score >= lvl.target) {
         state.wonLevel = true;
+        clearTimer();
         setTimeout(showLevelComplete, 300);
         return;
       }
@@ -783,9 +994,19 @@
     }
 
     // ===== EVENT LISTENERS =====
-    document.getElementById('btn-start').addEventListener('click', initGame);
+    document.getElementById('btn-start').addEventListener('click', () => {
+      if (state.difficulty) initGame();
+    });
     document.getElementById('btn-next-level').addEventListener('click', nextLevel);
-    document.getElementById('btn-play-again').addEventListener('click', initGame);
+    document.getElementById('btn-play-again').addEventListener('click', () => {
+      screenSwitch('screen-start');
+    });
+    document.getElementById('btn-try-again').addEventListener('click', () => {
+      startLevel(state.currentLevel);
+    });
+    document.getElementById('btn-timesup-menu').addEventListener('click', () => {
+      screenSwitch('screen-start');
+    });
   </script>
 </body>
 </html>
