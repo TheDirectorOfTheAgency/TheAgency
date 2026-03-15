@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malia's Squishy Shop!</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', cursive;
+      background: linear-gradient(135deg, #ffe0f0 0%, #e0f0ff 100%);
+      height: 100vh;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* ===== SCREENS ===== */
+    .screen {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+    }
+    .screen.active { display: flex; }
+
+    /* ===== START SCREEN ===== */
+    #screen-start {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      background: linear-gradient(135deg, #ffe0f0 0%, #ffd6e7 50%, #e0f0ff 100%);
+    }
+    #screen-start h1 {
+      font-size: clamp(2rem, 8vw, 4rem);
+      color: #c00060;
+      text-shadow: 3px 3px 0 #ffb3d9, 5px 5px 0 rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 0 20px;
+      animation: titleBounce 2s ease-in-out infinite;
+    }
+    .start-squishies {
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      letter-spacing: 8px;
+      animation: float 2s ease-in-out infinite;
+    }
+    .subtitle {
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      color: #7c3a8a;
+      text-align: center;
+      padding: 0 20px;
+    }
+    .level-info {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 0 20px;
+    }
+    .level-badge {
+      background: rgba(255,255,255,0.7);
+      border: 2px solid #ffb3d9;
+      border-radius: 16px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      color: #5a1a7a;
+    }
+
+    /* ===== GAME SCREEN ===== */
+    #screen-game {
+      flex-direction: column;
+    }
+
+    /* HUD */
+    #hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(6px);
+      border-bottom: 3px solid #ffb3d9;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      gap: 6px;
+      z-index: 10;
+    }
+    .hud-item {
+      font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+      font-weight: bold;
+      color: #5a1a7a;
+      background: rgba(255,255,255,0.6);
+      border-radius: 12px;
+      padding: 4px 12px;
+    }
+    .hud-item span {
+      color: #c00060;
+    }
+    #progress-bar-wrap {
+      width: 100%;
+      height: 8px;
+      background: #ffd6f0;
+      border-radius: 4px;
+      overflow: hidden;
+      flex-basis: 100%;
+    }
+    #progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #ff6eb4, #ff9f6b);
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* Play field */
+    #play-field {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Basket */
+    #basket {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      width: 110px;
+      background: rgba(255,255,255,0.9);
+      border: 3px solid #ffb3d9;
+      border-radius: 20px;
+      padding: 8px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(200,0,100,0.18);
+      z-index: 20;
+    }
+    #basket-icon {
+      font-size: 2.2rem;
+      display: block;
+      transition: transform 0.15s;
+    }
+    #basket-icon.bounce {
+      animation: basketBounce 0.35s ease;
+    }
+    #basket-label {
+      font-size: 0.65rem;
+      color: #888;
+      margin-bottom: 4px;
+    }
+    #basket-items {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1px;
+      max-height: 90px;
+      overflow: hidden;
+    }
+    .basket-thumb {
+      font-size: 1.1rem;
+      animation: popIn 0.3s ease;
+    }
+    .basket-needle-thumb {
+      display: inline-block;
+      width: 10px;
+      height: 26px;
+      background: linear-gradient(180deg, #ce93d8, #7b1fa2);
+      border-radius: 5px 5px 2px 2px;
+      vertical-align: middle;
+      animation: popIn 0.3s ease;
+    }
+
+    /* ===== SQUISHIES ===== */
+    .squishy {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      width: 80px;
+      text-align: center;
+      animation: float var(--float-dur, 3s) ease-in-out infinite;
+      animation-delay: var(--float-delay, 0s);
+      filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.18));
+      transition: transform 0.1s;
+      z-index: 5;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .squishy:hover { transform: scale(1.18); filter: drop-shadow(2px 6px 10px rgba(200,0,100,0.3)); }
+    .squishy:active { transform: scale(0.9); }
+
+    .squishy-emoji { font-size: 2.8rem; line-height: 1; }
+    .squishy-label {
+      font-size: 0.6rem;
+      color: #555;
+      line-height: 1.2;
+      margin-top: 2px;
+    }
+    .squishy-price {
+      font-size: 0.78rem;
+      font-weight: bold;
+      color: #c00060;
+      background: rgba(255,255,255,0.85);
+      border-radius: 8px;
+      padding: 1px 5px;
+      margin-top: 2px;
+    }
+
+    /* Needle squishy */
+    .needle-body {
+      width: 20px;
+      height: 66px;
+      background: linear-gradient(180deg, #f48fb1 0%, #ce93d8 40%, #7b1fa2 100%);
+      border-radius: 10px 10px 4px 4px;
+      margin: 0 auto 3px auto;
+      box-shadow: inset -3px 0 6px rgba(0,0,0,0.2), 0 3px 8px rgba(0,0,0,0.15);
+      position: relative;
+    }
+    .needle-body::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 4px;
+      width: 5px;
+      height: 20px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 3px;
+    }
+
+    /* Collect animation */
+    .squishy.collecting {
+      animation: collectFly 0.55s ease-in forwards !important;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* Score popup */
+    .score-pop {
+      position: absolute;
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #c00060;
+      text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff;
+      pointer-events: none;
+      animation: popUp 0.85s ease-out forwards;
+      z-index: 999;
+      white-space: nowrap;
+    }
+
+    /* ===== LEVEL COMPLETE SCREEN ===== */
+    #screen-level-complete {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      background: linear-gradient(135deg, #fff5a0 0%, #ffd6f0 100%);
+    }
+    #screen-level-complete h2 {
+      font-size: clamp(2rem, 7vw, 3.5rem);
+      color: #c00060;
+      text-shadow: 3px 3px 0 #ffb3d9;
+      text-align: center;
+      animation: titleBounce 1.5s ease-in-out infinite;
+    }
+    #levelup-msg {
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      color: #5a1a7a;
+      text-align: center;
+    }
+    #levelup-squishies-preview {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 4px;
+      max-width: 320px;
+      max-height: 120px;
+      overflow: hidden;
+      font-size: 1.8rem;
+    }
+    .preview-squishy {
+      animation: popIn 0.4s ease both;
+    }
+    .preview-needle {
+      display: inline-block;
+      width: 16px;
+      height: 44px;
+      background: linear-gradient(180deg, #f48fb1, #7b1fa2);
+      border-radius: 8px 8px 3px 3px;
+      animation: popIn 0.4s ease both;
+      vertical-align: middle;
+    }
+    #stars-display {
+      font-size: 2.5rem;
+      letter-spacing: 8px;
+    }
+
+    /* ===== WIN SCREEN ===== */
+    #screen-win {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      background: linear-gradient(135deg, #fff5a0 0%, #ffd6f0 50%, #d0f0ff 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    #screen-win h2 {
+      font-size: clamp(2.2rem, 8vw, 4rem);
+      color: #c00060;
+      text-shadow: 3px 3px 0 #ffb3d9, 6px 6px 0 rgba(0,0,0,0.08);
+      text-align: center;
+      z-index: 2;
+      animation: titleBounce 1.5s ease-in-out infinite;
+    }
+    #screen-win p {
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      color: #5a1a7a;
+      text-align: center;
+      z-index: 2;
+      padding: 0 20px;
+    }
+    #screen-win button { z-index: 2; }
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      opacity: 0;
+      animation: confettiFall var(--dur, 3s) var(--delay, 0s) ease-in infinite;
+      z-index: 1;
+    }
+
+    /* ===== BUTTONS ===== */
+    button {
+      font-family: inherit;
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      padding: 14px 36px;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #ff6eb4, #ff9f6b);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(200,0,100,0.3), 0 2px 0 rgba(0,0,0,0.1);
+      transition: transform 0.1s, box-shadow 0.1s;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+    button:hover {
+      transform: scale(1.06) translateY(-2px);
+      box-shadow: 0 7px 18px rgba(200,0,100,0.35);
+    }
+    button:active {
+      transform: scale(0.95) translateY(1px);
+      box-shadow: 0 2px 8px rgba(200,0,100,0.2);
+    }
+
+    /* ===== KEYFRAMES ===== */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-9px); }
+    }
+    @keyframes titleBounce {
+      0%, 100% { transform: scale(1) rotate(-1deg); }
+      50%       { transform: scale(1.04) rotate(1deg); }
+    }
+    @keyframes basketBounce {
+      0%   { transform: scale(1); }
+      30%  { transform: scale(1.45) rotate(-8deg); }
+      60%  { transform: scale(0.9) rotate(5deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    @keyframes popIn {
+      0%   { transform: scale(0); opacity: 0; }
+      70%  { transform: scale(1.25); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes popUp {
+      0%   { transform: translateY(0) scale(1);   opacity: 1; }
+      40%  { transform: translateY(-30px) scale(1.1); opacity: 1; }
+      100% { transform: translateY(-80px) scale(0.8); opacity: 0; }
+    }
+    @keyframes collectFly {
+      0%   { transform: scale(1.4); opacity: 1; }
+      50%  { transform: scale(0.6) translate(60px, 40px); opacity: 0.8; }
+      100% { transform: scale(0.1) translate(180px, 120px); opacity: 0; }
+    }
+    @keyframes confettiFall {
+      0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+    }
+    @keyframes ripple {
+      0%   { transform: scale(0); opacity: 0.7; }
+      100% { transform: scale(4); opacity: 0; }
+    }
+    .ripple {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(255,110,180,0.4);
+      pointer-events: none;
+      animation: ripple 0.5s ease-out forwards;
+      z-index: 50;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- START SCREEN -->
+  <div id="screen-start" class="screen active">
+    <h1>🛍️ Malia's Squishy Shop!</h1>
+    <div class="start-squishies">🍓🦄🍩🐱🧁</div>
+    <p class="subtitle">Click squishies to collect them in your basket!<br>Earn points and win the level!</p>
+    <div class="level-info">
+      <div class="level-badge">⭐ Level 1 — 20 squishies</div>
+      <div class="level-badge">⭐⭐ Level 2 — 30 squishies</div>
+      <div class="level-badge">⭐⭐⭐ Level 3 — 40 squishies</div>
+      <div class="level-badge">🔥 Hardest — 50 squishies!</div>
+    </div>
+    <button id="btn-start">Let's Play! 🎉</button>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="screen-game" class="screen">
+    <div id="hud">
+      <div class="hud-item">Level <span id="display-level">1</span></div>
+      <div class="hud-item">⭐ Points: <span id="display-score">0</span> / <span id="display-target">30</span></div>
+      <div class="hud-item">🧺 <span id="display-basket-count">0</span></div>
+      <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+    </div>
+    <div id="play-field"></div>
+    <div id="basket">
+      <span id="basket-icon">🧺</span>
+      <div id="basket-label">Your basket</div>
+      <div id="basket-items"></div>
+    </div>
+  </div>
+
+  <!-- LEVEL COMPLETE SCREEN -->
+  <div id="screen-level-complete" class="screen">
+    <div id="stars-display">⭐⭐⭐</div>
+    <h2 id="levelup-title">Level Complete! 🎉</h2>
+    <p id="levelup-msg">You collected <strong id="levelup-points">0</strong> points!</p>
+    <div id="levelup-squishies-preview"></div>
+    <button id="btn-next-level">Next Level! →</button>
+  </div>
+
+  <!-- WIN SCREEN -->
+  <div id="screen-win" class="screen">
+    <h2>🏆 YOU WIN! 🏆</h2>
+    <p>Amazing job, Malia!<br>You're the best Squishy Collector EVER! 🌟</p>
+    <div style="font-size:3rem; z-index:2;">🍓🦄🍩🐱🧁🍕🐻🐰🍉🍦</div>
+    <button id="btn-play-again">Play Again! 🎉</button>
+  </div>
+
+  <script>
+    // ===== SQUISHY CATALOG =====
+    const SQUISHY_TYPES = [
+      { id: 'strawberry', label: 'Strawberry', emoji: '🍓', points: 4, type: 'famous' },
+      { id: 'cat',        label: 'Kitty Cat',  emoji: '🐱', points: 5, type: 'famous' },
+      { id: 'donut',      label: 'Donut',      emoji: '🍩', points: 3, type: 'famous' },
+      { id: 'icecream',   label: 'Ice Cream',  emoji: '🍦', points: 4, type: 'famous' },
+      { id: 'watermelon', label: 'Watermelon', emoji: '🍉', points: 6, type: 'famous' },
+      { id: 'cupcake',    label: 'Cupcake',    emoji: '🧁', points: 5, type: 'famous' },
+      { id: 'unicorn',    label: 'Unicorn',    emoji: '🦄', points: 8, type: 'famous' },
+      { id: 'bear',       label: 'Teddy Bear', emoji: '🐻', points: 4, type: 'famous' },
+      { id: 'bunny',      label: 'Bunny',      emoji: '🐰', points: 4, type: 'famous' },
+      { id: 'pizza',      label: 'Pizza',      emoji: '🍕', points: 5, type: 'famous' },
+      { id: 'needle',     label: 'Needle',     emoji: null,  points: 2, type: 'needle' },
+    ];
+
+    // ===== LEVEL CONFIG =====
+    const LEVELS = [
+      { level: 1, squishyCount: 20, target: 30,  needlePct: 0.25 },
+      { level: 2, squishyCount: 30, target: 50,  needlePct: 0.28 },
+      { level: 3, squishyCount: 40, target: 80,  needlePct: 0.33 },
+      { level: 4, squishyCount: 50, target: 100, needlePct: 0.38 },
+    ];
+
+    // ===== GAME STATE =====
+    const state = {
+      currentLevel: 0,
+      score: 0,
+      basket: [],
+      squishiesOnField: [],
+      wonLevel: false,
+    };
+
+    // ===== DOM REFS =====
+    const playField      = document.getElementById('play-field');
+    const basketIcon     = document.getElementById('basket-icon');
+    const basketItems    = document.getElementById('basket-items');
+    const displayLevel   = document.getElementById('display-level');
+    const displayScore   = document.getElementById('display-score');
+    const displayTarget  = document.getElementById('display-target');
+    const displayBasket  = document.getElementById('display-basket-count');
+    const progressBar    = document.getElementById('progress-bar');
+
+    // ===== SCREEN SWITCH =====
+    function screenSwitch(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    // ===== INIT =====
+    function initGame() {
+      state.currentLevel = 0;
+      state.score = 0;
+      state.basket = [];
+      state.squishiesOnField = [];
+      state.wonLevel = false;
+      startLevel(0);
+    }
+
+    function startLevel(levelIndex) {
+      state.score = 0;
+      state.basket = [];
+      state.squishiesOnField = [];
+      state.wonLevel = false;
+
+      // Clear field
+      playField.innerHTML = '';
+      basketItems.innerHTML = '';
+
+      const lvl = LEVELS[levelIndex];
+      displayLevel.textContent = lvl.level;
+      displayTarget.textContent = lvl.target;
+      updateHUD();
+
+      screenSwitch('screen-game');
+      spawnSquishies(lvl.squishyCount, lvl.needlePct);
+    }
+
+    // ===== SPAWN SQUISHIES =====
+    function spawnSquishies(count, needlePct) {
+      // Build random selection weighted by needle %
+      const picks = [];
+      const famousTypes = SQUISHY_TYPES.filter(t => t.type === 'famous');
+      const needleType  = SQUISHY_TYPES.find(t => t.type === 'needle');
+
+      for (let i = 0; i < count; i++) {
+        if (Math.random() < needlePct) {
+          picks.push(needleType);
+        } else {
+          picks.push(famousTypes[Math.floor(Math.random() * famousTypes.length)]);
+        }
+      }
+
+      // Shuffle
+      for (let i = picks.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [picks[i], picks[j]] = [picks[j], picks[i]];
+      }
+
+      // Place them with non-overlapping random positions (grid with jitter)
+      const cols = Math.ceil(Math.sqrt(count * 1.6));
+      const rows = Math.ceil(count / cols);
+      const cellW = 88 / cols;
+      const cellH = 82 / rows;
+
+      picks.forEach((type, i) => {
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        // Add jitter within cell
+        const jitterX = (Math.random() - 0.5) * cellW * 0.5;
+        const jitterY = (Math.random() - 0.5) * cellH * 0.5;
+        const left = 3 + col * cellW + cellW / 2 + jitterX;
+        const top  = 5 + row * cellH + cellH / 2 + jitterY;
+
+        const instanceId = `sq_${i}_${Date.now()}`;
+        const el = createSquishyElement(type, instanceId, i);
+        el.style.left = `${Math.max(2, Math.min(88, left))}%`;
+        el.style.top  = `${Math.max(3, Math.min(85, top))}%`;
+
+        playField.appendChild(el);
+        state.squishiesOnField.push({ instanceId, type, el });
+      });
+    }
+
+    // ===== CREATE SQUISHY DOM ELEMENT =====
+    function createSquishyElement(type, instanceId, index) {
+      const div = document.createElement('div');
+      div.className = 'squishy';
+      div.dataset.instanceId = instanceId;
+
+      // Staggered float animation
+      div.style.setProperty('--float-delay', `${(index * 0.13) % 3}s`);
+      div.style.setProperty('--float-dur',   `${2.5 + (index % 7) * 0.2}s`);
+
+      if (type.type === 'needle') {
+        div.innerHTML = `
+          <div class="needle-body"></div>
+          <span class="squishy-label">${type.label}</span>
+          <span class="squishy-price">$${type.points}</span>`;
+      } else {
+        div.innerHTML = `
+          <span class="squishy-emoji">${type.emoji}</span>
+          <span class="squishy-label">${type.label}</span>
+          <span class="squishy-price">$${type.points}</span>`;
+      }
+
+      div.addEventListener('click', (e) => {
+        e.stopPropagation();
+        handleSquishyClick(instanceId, e);
+      });
+
+      return div;
+    }
+
+    // ===== HANDLE CLICK =====
+    function handleSquishyClick(instanceId, event) {
+      const idx = state.squishiesOnField.findIndex(s => s.instanceId === instanceId);
+      if (idx === -1) return;
+
+      const item = state.squishiesOnField[idx];
+      state.squishiesOnField.splice(idx, 1); // remove from field list immediately
+
+      const { type, el } = item;
+
+      // Spawn ripple at click position
+      const fieldRect = playField.getBoundingClientRect();
+      const rx = event.clientX - fieldRect.left - 15;
+      const ry = event.clientY - fieldRect.top  - 15;
+      spawnRipple(rx, ry);
+
+      // Collect animation
+      el.classList.add('collecting');
+
+      // Score popup
+      spawnScorePopup(rx, ry - 20, type.points);
+
+      // After animation, update state
+      setTimeout(() => {
+        el.remove();
+        state.score += type.points;
+        state.basket.push({ type, points: type.points });
+        updateHUD();
+        addToBasketVisual(type);
+        if (!state.wonLevel) {
+          checkWinCondition();
+        }
+      }, 560);
+    }
+
+    // ===== WIN CONDITION =====
+    function checkWinCondition() {
+      const lvl = LEVELS[state.currentLevel];
+      if (state.score >= lvl.target) {
+        state.wonLevel = true;
+        setTimeout(showLevelComplete, 300);
+        return;
+      }
+      // If field is empty and haven't won, respawn (can't get stuck)
+      if (state.squishiesOnField.length === 0) {
+        setTimeout(() => {
+          spawnSquishies(lvl.squishyCount, lvl.needlePct);
+        }, 400);
+      }
+    }
+
+    // ===== LEVEL COMPLETE =====
+    function showLevelComplete() {
+      if (state.currentLevel >= LEVELS.length - 1) {
+        showWin();
+        return;
+      }
+
+      document.getElementById('levelup-points').textContent = state.score;
+      document.getElementById('levelup-title').textContent = 'Level Complete! 🎉';
+
+      // Stars based on score vs target
+      const lvl = LEVELS[state.currentLevel];
+      const ratio = state.score / lvl.target;
+      const stars = ratio >= 2 ? '⭐⭐⭐' : ratio >= 1.5 ? '⭐⭐' : '⭐';
+      document.getElementById('stars-display').textContent = stars;
+
+      // Preview collected squishies (up to 20)
+      const preview = document.getElementById('levelup-squishies-preview');
+      preview.innerHTML = '';
+      const shown = state.basket.slice(-20);
+      shown.forEach((item, i) => {
+        if (item.type.type === 'needle') {
+          const el = document.createElement('div');
+          el.className = 'preview-needle';
+          el.style.animationDelay = `${i * 0.04}s`;
+          preview.appendChild(el);
+        } else {
+          const el = document.createElement('span');
+          el.className = 'preview-squishy';
+          el.textContent = item.type.emoji;
+          el.style.animationDelay = `${i * 0.04}s`;
+          preview.appendChild(el);
+        }
+      });
+
+      screenSwitch('screen-level-complete');
+    }
+
+    function showWin() {
+      spawnConfetti();
+      screenSwitch('screen-win');
+    }
+
+    function nextLevel() {
+      state.currentLevel++;
+      startLevel(state.currentLevel);
+    }
+
+    // ===== HUD UPDATE =====
+    function updateHUD() {
+      const lvl = LEVELS[state.currentLevel];
+      displayScore.textContent  = state.score;
+      displayTarget.textContent = lvl.target;
+      displayBasket.textContent = state.basket.length;
+      const pct = Math.min(100, (state.score / lvl.target) * 100);
+      progressBar.style.width = pct + '%';
+    }
+
+    // ===== BASKET VISUAL =====
+    function addToBasketVisual(type) {
+      // Keep only last 18 items visible
+      const existing = basketItems.querySelectorAll('.basket-thumb, .basket-needle-thumb');
+      if (existing.length >= 18) existing[0].remove();
+
+      if (type.type === 'needle') {
+        const el = document.createElement('div');
+        el.className = 'basket-needle-thumb';
+        basketItems.appendChild(el);
+      } else {
+        const el = document.createElement('span');
+        el.className = 'basket-thumb';
+        el.textContent = type.emoji;
+        basketItems.appendChild(el);
+      }
+
+      // Bounce basket icon
+      basketIcon.classList.remove('bounce');
+      void basketIcon.offsetWidth; // reflow to restart animation
+      basketIcon.classList.add('bounce');
+      setTimeout(() => basketIcon.classList.remove('bounce'), 400);
+    }
+
+    // ===== SCORE POPUP =====
+    function spawnScorePopup(x, y, points) {
+      const el = document.createElement('div');
+      el.className = 'score-pop';
+      el.textContent = `+$${points}`;
+      el.style.left = `${x}px`;
+      el.style.top  = `${y}px`;
+      playField.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }
+
+    // ===== RIPPLE =====
+    function spawnRipple(x, y) {
+      const el = document.createElement('div');
+      el.className = 'ripple';
+      el.style.left = `${x}px`;
+      el.style.top  = `${y}px`;
+      playField.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }
+
+    // ===== CONFETTI =====
+    function spawnConfetti() {
+      const win = document.getElementById('screen-win');
+      // Remove old confetti
+      win.querySelectorAll('.confetti-piece').forEach(c => c.remove());
+
+      const colors = ['#ff6eb4','#ff9f6b','#a78bfa','#34d399','#fbbf24','#60a5fa','#f87171','#c084fc'];
+      for (let i = 0; i < 45; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left    = `${Math.random() * 100}%`;
+        el.style.top     = `-20px`;
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.width   = `${6 + Math.random() * 8}px`;
+        el.style.height  = `${6 + Math.random() * 8}px`;
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        el.style.setProperty('--dur',   `${2 + Math.random() * 3}s`);
+        el.style.setProperty('--delay', `${Math.random() * 2}s`);
+        win.appendChild(el);
+      }
+    }
+
+    // ===== EVENT LISTENERS =====
+    document.getElementById('btn-start').addEventListener('click', initGame);
+    document.getElementById('btn-next-level').addEventListener('click', nextLevel);
+    document.getElementById('btn-play-again').addEventListener('click', initGame);
+  </script>
+</body>
+</html>
