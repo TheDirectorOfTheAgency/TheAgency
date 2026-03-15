@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>LabooBoo Dress-Up ✨</title>
+<title>Labubu Dress-Up ✨</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet" />
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -36,16 +36,11 @@ body {
 .subtitle { font-size: 1.1rem; color: #fff8; font-weight: 700; margin-top: 2px; }
 
 .main {
-  display: flex;
-  flex: 1;
-  gap: 20px;
+  display: flex; flex: 1; gap: 20px;
   padding: 16px 20px 24px;
-  max-width: 1100px;
-  margin: 0 auto;
-  width: 100%;
+  max-width: 1100px; margin: 0 auto; width: 100%;
 }
 
-/* ── Stage ── */
 .stage-col { display: flex; flex-direction: column; align-items: center; gap: 12px; flex: 0 0 270px; }
 
 .name-badge {
@@ -68,7 +63,7 @@ body {
   background: white; border-radius: 28px;
   box-shadow: 0 8px 32px #b5179e22; border: 4px solid #ffb3d9; padding: 8px; overflow: hidden;
 }
-#labooboo-svg { width: 100%; height: auto; display: block; }
+#labubu-svg { width: 100%; height: auto; display: block; }
 
 .stage-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 .btn {
@@ -82,7 +77,6 @@ body {
 .btn-save   { background: linear-gradient(135deg,#a29bfe,#74b9ff); color: white; }
 .btn-reset  { background: linear-gradient(135deg,#ff85a1,#fd79a8); color: white; }
 
-/* ── Panel ── */
 .panel-col { flex: 1; min-width: 0; }
 .panel {
   background: white; border-radius: 24px; box-shadow: 0 8px 32px #a29bfe22;
@@ -97,8 +91,7 @@ body {
   display: flex; flex-direction: column; align-items: center; gap: 2px;
   padding: 7px 10px; border: 2px solid transparent; border-radius: 12px 12px 0 0;
   background: #fff8; cursor: pointer; font-family: 'Nunito', sans-serif;
-  font-size: .7rem; font-weight: 700; color: #7b2d8b;
-  transition: background .15s, transform .1s;
+  font-size: .7rem; font-weight: 700; color: #7b2d8b; transition: background .15s, transform .1s;
 }
 .tab-btn:hover { background: white; transform: translateY(-2px); }
 .tab-btn.active { background: white; border-color: #b5179e; color: #b5179e; transform: translateY(-2px); }
@@ -114,8 +107,7 @@ body {
 .item-btn {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
   padding: 10px 6px; border: 3px solid #e8d5ff; border-radius: 16px;
-  background: #fdf8ff; cursor: pointer; transition: all .15s; font-family: 'Nunito', sans-serif;
-  width: 100%;
+  background: #fdf8ff; cursor: pointer; transition: all .15s; font-family: 'Nunito', sans-serif; width: 100%;
 }
 .item-btn:hover { border-color: #b5179e; background: #ffe0f0; transform: scale(1.06); }
 .item-btn.selected {
@@ -137,7 +129,6 @@ body {
 .swatch-btn:hover { transform: scale(1.18); border-color: #b5179e; }
 .swatch-btn.selected { border-color: #b5179e; box-shadow: 0 0 0 3px #ff85a160; transform: scale(1.12); }
 
-/* ── Confetti ── */
 .confetti-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 10; overflow: hidden; }
 .confetti-piece { position: absolute; top: -20px; animation: fall 1.6s ease-in forwards; }
 @keyframes fall { 0%{top:-20px;transform:rotate(0) scale(1);opacity:1} 80%{opacity:1} 100%{top:110%;transform:rotate(720deg) scale(.7);opacity:0} }
@@ -160,14 +151,13 @@ body {
 
   <header class="header">
     <h1 class="title">
-      <span class="title-star">✨</span> LabooBoo Dress-Up <span class="title-star">✨</span>
+      <span class="title-star">✨</span> Labubu Dress-Up <span class="title-star">✨</span>
     </h1>
-    <p class="subtitle">Create your very own LabooBoo!</p>
+    <p class="subtitle">Create your very own Labubu!</p>
   </header>
 
   <main class="main">
 
-    <!-- Stage -->
     <div class="stage-col">
       <div class="name-badge" id="name-display">
         <span class="character-name" id="name-text">Sparkle</span>
@@ -176,7 +166,7 @@ body {
 
       <div class="character-wrap">
         <div class="confetti-overlay" id="confetti"></div>
-        <svg id="labooboo-svg" viewBox="0 0 260 420" xmlns="http://www.w3.org/2000/svg"></svg>
+        <svg id="labubu-svg" viewBox="0 0 260 430" xmlns="http://www.w3.org/2000/svg"></svg>
       </div>
 
       <div class="stage-actions">
@@ -186,7 +176,6 @@ body {
       </div>
     </div>
 
-    <!-- Panel -->
     <div class="panel-col">
       <div class="panel">
         <div class="tabs" id="tabs"></div>
@@ -200,34 +189,22 @@ body {
 </div>
 
 <script>
-// ─────────────────────────────────────────
-//  DATA
-// ─────────────────────────────────────────
 const RAINBOW = 'url(#rainbowGrad)';
 
 const ACCESSORIES = {
-  wigs:      { label:'Hair & Wigs',     icon:'💇', items:[
-    { id:'wig_none',    label:'No Hair',        emoji:'✕',  color:null,       style:null },
-    { id:'wig_curly',   label:'Curly',          emoji:'🌀', color:'#f4a261',  style:'curly' },
-    { id:'wig_straight',label:'Straight',       emoji:'〰️', color:'#e76f51',  style:'straight' },
-    { id:'wig_pigtails',label:'Pigtails',       emoji:'🎀', color:'#f7c59f',  style:'pigtails' },
-    { id:'wig_rainbow', label:'Rainbow',        emoji:'🌈', color:'rainbow',  style:'straight' },
-    { id:'wig_purple',  label:'Purple Princess',emoji:'💜', color:'#b5179e',  style:'straight' },
-    { id:'wig_blue',    label:'Ocean Blue',     emoji:'💙', color:'#4cc9f0',  style:'straight' },
+  hats:      { label:'Hats',           icon:'🎩', items:[
+    { id:'hat_none',    label:'No Hat',       emoji:'' },
+    { id:'hat_crown',   label:'Crown',        emoji:'👑' },
+    { id:'hat_bow',     label:'Big Bow',      emoji:'🎀' },
+    { id:'hat_party',   label:'Party Hat',    emoji:'🎉' },
+    { id:'hat_flower',  label:'Flower Hat',   emoji:'🌸' },
+    { id:'hat_sun',     label:'Sun Hat',      emoji:'🌻' },
+    { id:'hat_baseball',label:'Cap',          emoji:'🧢' },
+    { id:'hat_witch',   label:'Witch Hat',    emoji:'🧙' },
+    { id:'hat_unicorn', label:'Unicorn Horn', emoji:'🦄' },
   ]},
-  hats:      { label:'Hats',            icon:'🎩', items:[
-    { id:'hat_none',    label:'No Hat',      emoji:'' },
-    { id:'hat_crown',   label:'Crown',       emoji:'👑' },
-    { id:'hat_bow',     label:'Big Bow',     emoji:'🎀' },
-    { id:'hat_party',   label:'Party Hat',   emoji:'🎉' },
-    { id:'hat_flower',  label:'Flower Hat',  emoji:'🌸' },
-    { id:'hat_sun',     label:'Sun Hat',     emoji:'🌻' },
-    { id:'hat_baseball',label:'Cap',         emoji:'🧢' },
-    { id:'hat_witch',   label:'Witch Hat',   emoji:'🧙' },
-    { id:'hat_unicorn', label:'Unicorn Horn',emoji:'🦄' },
-  ]},
-  tops:      { label:'Tops & Dresses',  icon:'👗', items:[
-    { id:'top_none',          label:'No Top',        emoji:'✕',  color:'#ffd6e7' },
+  tops:      { label:'Tops & Dresses', icon:'👗', items:[
+    { id:'top_none',          label:'No Outfit',     emoji:'✕',  color:'#ffd6e7' },
     { id:'top_dress_pink',    label:'Pink Dress',    emoji:'👗', color:'#ff85a1' },
     { id:'top_dress_blue',    label:'Blue Dress',    emoji:'💙', color:'#74b9ff' },
     { id:'top_dress_purple',  label:'Purple Dress',  emoji:'💜', color:'#a29bfe' },
@@ -236,7 +213,7 @@ const ACCESSORIES = {
     { id:'top_sweater',       label:'Cozy Sweater',  emoji:'🧶', color:'#fd79a8' },
     { id:'top_tutu',          label:'Tutu',          emoji:'🩰', color:'#ffb3c1' },
   ]},
-  necklaces: { label:'Necklaces',       icon:'📿', items:[
+  necklaces: { label:'Necklaces',      icon:'📿', items:[
     { id:'neck_none',      label:'None',          emoji:'' },
     { id:'neck_pearls',    label:'Pearls',        emoji:'🫧' },
     { id:'neck_heart',     label:'Heart Locket',  emoji:'❤️' },
@@ -245,79 +222,79 @@ const ACCESSORIES = {
     { id:'neck_butterfly', label:'Butterfly',     emoji:'🦋' },
     { id:'neck_flower',    label:'Flower Beads',  emoji:'🌺' },
   ]},
-  bags:      { label:'Purses & Bags',   icon:'👜', items:[
-    { id:'bag_none',       label:'No Bag',       emoji:'' },
-    { id:'bag_purse_pink', label:'Pink Purse',   emoji:'👛' },
-    { id:'bag_handbag',    label:'Handbag',      emoji:'👜' },
-    { id:'bag_backpack',   label:'Mini Backpack',emoji:'🎒' },
-    { id:'bag_star',       label:'Star Bag',     emoji:'⭐' },
-    { id:'bag_heart',      label:'Heart Bag',    emoji:'💗' },
-    { id:'bag_rainbow',    label:'Rainbow Bag',  emoji:'🌈' },
+  bags:      { label:'Purses & Bags',  icon:'👜', items:[
+    { id:'bag_none',       label:'No Bag',        emoji:'' },
+    { id:'bag_purse_pink', label:'Pink Purse',    emoji:'👛' },
+    { id:'bag_handbag',    label:'Handbag',       emoji:'👜' },
+    { id:'bag_backpack',   label:'Mini Backpack', emoji:'🎒' },
+    { id:'bag_star',       label:'Star Bag',      emoji:'⭐' },
+    { id:'bag_heart',      label:'Heart Bag',     emoji:'💗' },
+    { id:'bag_rainbow',    label:'Rainbow Bag',   emoji:'🌈' },
   ]},
-  socks:     { label:'Socks & Shoes',   icon:'🧦', items:[
-    { id:'socks_none',    label:'None',          emoji:'' },
-    { id:'socks_rainbow', label:'Rainbow Socks', emoji:'🌈', color:'rainbow' },
-    { id:'socks_pink',    label:'Pink Socks',    emoji:'💗', color:'#ff85a1' },
-    { id:'socks_purple',  label:'Purple Socks',  emoji:'💜', color:'#a29bfe' },
-    { id:'shoes_sneakers',label:'Sneakers',      emoji:'👟' },
-    { id:'shoes_heels',   label:'Sparkle Heels', emoji:'👠' },
-    { id:'shoes_boots',   label:'Boots',         emoji:'🥾' },
-    { id:'shoes_ballet',  label:'Ballet Flats',  emoji:'🩰' },
+  shoes:     { label:'Shoes',          icon:'👟', items:[
+    { id:'shoes_none',    label:'None',           emoji:'' },
+    { id:'shoes_sneakers',label:'Sneakers',       emoji:'👟' },
+    { id:'shoes_heels',   label:'Sparkle Heels',  emoji:'👠' },
+    { id:'shoes_boots',   label:'Boots',          emoji:'🥾' },
+    { id:'shoes_ballet',  label:'Ballet Flats',   emoji:'🩰' },
+    { id:'shoes_rainbow', label:'Rainbow Shoes',  emoji:'🌈', color:'rainbow' },
+    { id:'shoes_pink',    label:'Pink Shoes',     emoji:'🩷', color:'#ff85a1' },
   ]},
-  makeup:    { label:'Makeup & Blush',  icon:'💄', items:[
+  makeup:    { label:'Face & Blush',   icon:'💄', items:[
     { id:'makeup_none',        label:'No Makeup',      emoji:'' },
     { id:'makeup_blush',       label:'Pink Blush',     emoji:'🌸', blush:'#ffb3c6' },
+    { id:'makeup_blush_peach', label:'Peach Blush',    emoji:'🍑', blush:'#ffd6a5' },
     { id:'makeup_lips_red',    label:'Red Lips',       emoji:'💋', lips:'#e63946' },
     { id:'makeup_lips_pink',   label:'Pink Lips',      emoji:'🩷', lips:'#ff85a1' },
     { id:'makeup_glitter',     label:'Glitter Cheeks', emoji:'✨', blush:'#ffd6e0', glitter:true },
     { id:'makeup_rainbow_eyes',label:'Rainbow Eyes',   emoji:'🌈', eyes:'rainbow' },
     { id:'makeup_stars',       label:'Star Stickers',  emoji:'⭐', stars:true },
   ]},
-  extras:    { label:'Extras',          icon:'✨', items:[
-    { id:'extra_none',         label:'None',          emoji:'' },
-    { id:'extra_glasses',      label:'Sunglasses',    emoji:'😎' },
-    { id:'extra_wings',        label:'Fairy Wings',   emoji:'🧚' },
-    { id:'extra_wand',         label:'Magic Wand',    emoji:'🪄' },
-    { id:'extra_flowers',      label:'Flowers',       emoji:'🌺' },
-    { id:'extra_heart_balloon',label:'Heart Balloon', emoji:'🎈' },
-    { id:'extra_sparkles',     label:'Sparkles',      emoji:'✨' },
+  extras:    { label:'Extras',         icon:'✨', items:[
+    { id:'extra_none',         label:'None',           emoji:'' },
+    { id:'extra_glasses',      label:'Sunglasses',     emoji:'😎' },
+    { id:'extra_wings',        label:'Fairy Wings',    emoji:'🧚' },
+    { id:'extra_wand',         label:'Magic Wand',     emoji:'🪄' },
+    { id:'extra_flowers',      label:'Flowers',        emoji:'🌺' },
+    { id:'extra_heart_balloon',label:'Heart Balloon',  emoji:'🎈' },
+    { id:'extra_sparkles',     label:'Sparkles',       emoji:'✨' },
   ]},
 };
 
-const SKIN_TONES = [
-  { id:'skin_1', label:'Cream',   color:'#FDDBB4' },
-  { id:'skin_2', label:'Peach',   color:'#F1C27D' },
-  { id:'skin_3', label:'Honey',   color:'#E0AC69' },
-  { id:'skin_4', label:'Caramel', color:'#C68642' },
-  { id:'skin_5', label:'Brown',   color:'#8D5524' },
-  { id:'skin_6', label:'Ebony',   color:'#3B1F0A' },
+// Labubu comes in many colourways — "fur" instead of skin
+const FUR_COLORS = [
+  { id:'fur_cream',  label:'Classic Cream', color:'#F5DEB3' },
+  { id:'fur_pink',   label:'Bubblegum',     color:'#FFB3C6' },
+  { id:'fur_purple', label:'Lavender',      color:'#C9B1FF' },
+  { id:'fur_blue',   label:'Sky Blue',      color:'#A8D8EA' },
+  { id:'fur_mint',   label:'Mint',          color:'#B5EAD7' },
+  { id:'fur_grey',   label:'Silver',        color:'#D3D3D3' },
+  { id:'fur_brown',  label:'Caramel',       color:'#C68642' },
+  { id:'fur_black',  label:'Midnight',      color:'#3a3a3a' },
 ];
 
 const EYE_COLORS = [
+  { id:'eye_black',  label:'Black',   color:'#1a1a1a' },
   { id:'eye_brown',  label:'Brown',   color:'#6B4423' },
   { id:'eye_blue',   label:'Blue',    color:'#4CC9F0' },
-  { id:'eye_green',  label:'Green',   color:'#52B788' },
   { id:'eye_purple', label:'Purple',  color:'#B5179E' },
   { id:'eye_rainbow',label:'Rainbow', color:'rainbow' },
 ];
 
-const NAMES = ['Sparkle','Bubbles','Starshine','Cotton Candy','Rainbow','Glitter','Blossom','Twinkle','Cupcake','Petal'];
+const NAMES = ['Sparkle','Bubbles','Starshine','Cotton Candy','Rainbow','Glitter','Blossom','Twinkle','Cupcake','Petal','Mochi','Boba','Lulu','Kiki','Mimo'];
 
 let outfit = {
-  wigs:'wig_curly', hats:'hat_none', tops:'top_dress_pink',
-  necklaces:'neck_none', bags:'bag_none', socks:'socks_none',
-  makeup:'makeup_none', extras:'extra_none',
-  skinTone:'skin_2', eyeColor:'eye_brown',
+  hats:'hat_none', tops:'top_dress_pink',
+  necklaces:'neck_none', bags:'bag_none', shoes:'shoes_none',
+  makeup:'makeup_blush', extras:'extra_none',
+  furColor:'fur_cream', eyeColor:'eye_black',
 };
 
-let activeTab = 'wigs';
+let activeTab = 'hats';
 
-// ─────────────────────────────────────────
-//  HELPERS
-// ─────────────────────────────────────────
 function findItem(cat, id) {
-  if (cat === 'skin') return SKIN_TONES.find(s => s.id === id);
-  if (cat === 'eye')  return EYE_COLORS.find(e => e.id === id);
+  if (cat === 'fur') return FUR_COLORS.find(s => s.id === id);
+  if (cat === 'eye') return EYE_COLORS.find(e => e.id === id);
   return ACCESSORIES[cat]?.items.find(i => i.id === id);
 }
 
@@ -333,47 +310,59 @@ function svgEl(tag, attrs, children) {
   return el;
 }
 
-function text(x, y, content, size, anchor) {
+function txt(x, y, content, size, anchor) {
   return svgEl('text', { x, y, 'font-size': size || 30, 'text-anchor': anchor || 'middle', 'dominant-baseline':'auto' }, content);
 }
 
+// Draw a spiky/fluffy fur border as a polygon around a centre point
+function furRing(cx, cy, rInner, rOuter, spikes, fill, opac) {
+  const pts = [];
+  for (let i = 0; i < spikes * 2; i++) {
+    const angle = (Math.PI * 2 * i) / (spikes * 2) - Math.PI / 2;
+    const r = i % 2 === 0 ? rOuter : rInner;
+    pts.push(`${cx + Math.cos(angle) * r},${cy + Math.sin(angle) * r}`);
+  }
+  const attrs = { points: pts.join(' '), fill };
+  if (opac != null) attrs.opacity = opac;
+  return svgEl('polygon', attrs);
+}
+
 // ─────────────────────────────────────────
-//  SVG CHARACTER RENDERER
+//  SVG CHARACTER RENDERER — Labubu style
 // ─────────────────────────────────────────
 function buildSVG() {
-  const svg = document.getElementById('labooboo-svg');
+  const svg = document.getElementById('labubu-svg');
   svg.innerHTML = '';
 
-  const skin  = SKIN_TONES.find(s => s.id === outfit.skinTone) || SKIN_TONES[1];
+  const fur   = FUR_COLORS.find(f => f.id === outfit.furColor) || FUR_COLORS[0];
   const eye   = EYE_COLORS.find(e => e.id === outfit.eyeColor) || EYE_COLORS[0];
-  const wig   = findItem('wigs', outfit.wigs);
-  const hat   = findItem('hats', outfit.hats);
-  const top   = findItem('tops', outfit.tops);
+  const hat   = findItem('hats',      outfit.hats);
+  const top   = findItem('tops',      outfit.tops);
   const neck  = findItem('necklaces', outfit.necklaces);
-  const bag   = findItem('bags', outfit.bags);
-  const sock  = findItem('socks', outfit.socks);
-  const mup   = findItem('makeup', outfit.makeup);
-  const extra = findItem('extras', outfit.extras);
+  const bag   = findItem('bags',      outfit.bags);
+  const shoe  = findItem('shoes',     outfit.shoes);
+  const mup   = findItem('makeup',    outfit.makeup);
+  const extra = findItem('extras',    outfit.extras);
 
-  const sc = skin.color;
-  const ec = eye.color === 'rainbow' ? RAINBOW : eye.color;
-  const wc = (wig && wig.color && wig.color !== null) ? colorFill(wig.color) : null;
-  const tc = top ? colorFill(top.color) : '#ffd6e7';
+  const fc  = fur.color;                                      // fur colour
+  // Slightly darker shade for inner ear / detail
+  const fc2 = fur.id === 'fur_black' ? '#555' : '#f9a8c9';
+  const ec  = eye.color === 'rainbow' ? RAINBOW : eye.color;
+  const tc  = top ? colorFill(top.color) : '#ffd6e7';
   const blush = mup?.blush || null;
-  const lips  = mup?.lips  || '#e88';
+  const lips  = mup?.lips  || null;
 
   // ── defs ──
   const defs = svgEl('defs');
-
   const rg = svgEl('linearGradient', { id:'rainbowGrad', x1:'0%', y1:'0%', x2:'100%', y2:'0%' });
   [['0%','#ff595e'],['17%','#ff924c'],['34%','#ffca3a'],['50%','#8ac926'],['67%','#1982c4'],['84%','#6a4c93'],['100%','#ff595e']]
-    .forEach(([off, col]) => { const s = svgEl('stop'); s.setAttribute('offset', off); s.setAttribute('stop-color', col); rg.appendChild(s); });
+    .forEach(([off,col]) => { const s = svgEl('stop'); s.setAttribute('offset',off); s.setAttribute('stop-color',col); rg.appendChild(s); });
   defs.appendChild(rg);
 
   if (blush) {
     const bg = svgEl('radialGradient', { id:'blushG', cx:'50%', cy:'50%', r:'50%' });
-    [['0%', blush, '0.7'],['100%', blush, '0']].forEach(([off, col, op]) => {
-      const s = svgEl('stop'); s.setAttribute('offset', off); s.setAttribute('stop-color', col); s.setAttribute('stop-opacity', op); bg.appendChild(s);
+    [['0%',blush,'0.75'],['100%',blush,'0']].forEach(([off,col,op]) => {
+      const s = svgEl('stop'); s.setAttribute('offset',off); s.setAttribute('stop-color',col); s.setAttribute('stop-opacity',op); bg.appendChild(s);
     });
     defs.appendChild(bg);
   }
@@ -381,137 +370,167 @@ function buildSVG() {
 
   function add(...els) { els.forEach(e => e && svg.appendChild(e)); }
 
-  // ── Body ──
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // BODY — plump round torso
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   if (top && top.id !== 'top_none') {
-    add(svgEl('ellipse', { cx:130, cy:310, rx:58, ry:80, fill:tc }));
+    // Fluffy body silhouette
+    add(furRing(130, 315, 52, 62, 10, fc, 0.55));
+    add(svgEl('ellipse', { cx:130, cy:315, rx:52, ry:68, fill:tc }));
+
     if (top.id === 'top_tutu') {
-      add(svgEl('ellipse', { cx:130, cy:300, rx:72, ry:22, fill:'#ffb3c1', opacity:.8 }));
-      add(svgEl('ellipse', { cx:130, cy:308, rx:68, ry:20, fill:'#ffd6e0', opacity:.7 }));
+      add(svgEl('ellipse', { cx:130, cy:308, rx:66, ry:20, fill:'#ffb3c1', opacity:.85 }));
+      add(svgEl('ellipse', { cx:130, cy:316, rx:60, ry:16, fill:'#ffd6e0', opacity:.75 }));
     }
     if (top.id === 'top_overalls') {
-      add(svgEl('rect', { x:110, y:240, width:12, height:50, rx:6, fill:'#2563eb' }));
-      add(svgEl('rect', { x:138, y:240, width:12, height:50, rx:6, fill:'#2563eb' }));
+      add(svgEl('rect', { x:112, y:248, width:12, height:46, rx:6, fill:'#2563eb' }));
+      add(svgEl('rect', { x:136, y:248, width:12, height:46, rx:6, fill:'#2563eb' }));
     }
   }
 
-  // Arms + hands
-  add(svgEl('ellipse', { cx:72, cy:280, rx:18, ry:40, fill:sc, transform:'rotate(-15 72 280)' }));
-  add(svgEl('ellipse', { cx:188, cy:280, rx:18, ry:40, fill:sc, transform:'rotate(15 188 280)' }));
-  add(svgEl('circle',  { cx:60, cy:315, r:14, fill:sc }));
-  add(svgEl('circle',  { cx:200, cy:315, r:14, fill:sc }));
+  // ── Stubby arms ──
+  // Left arm
+  add(svgEl('ellipse', { cx:76, cy:296, rx:15, ry:34, fill:fc, transform:'rotate(-18 76 296)' }));
+  add(furRing(58, 326, 10, 16, 6, fc, 0.7));
+  add(svgEl('circle', { cx:58, cy:326, r:13, fill:fc }));
 
-  // Bag
-  if (bag && bag.id !== 'bag_none') add(text(210, 328, bag.emoji, 28));
+  // Right arm
+  add(svgEl('ellipse', { cx:184, cy:296, rx:15, ry:34, fill:fc, transform:'rotate(18 184 296)' }));
+  add(furRing(202, 326, 10, 16, 6, fc, 0.7));
+  add(svgEl('circle', { cx:202, cy:326, r:13, fill:fc }));
 
-  // Legs
-  add(svgEl('rect', { x:100, y:370, width:22, height:40, rx:11, fill:sc }));
-  add(svgEl('rect', { x:138, y:370, width:22, height:40, rx:11, fill:sc }));
+  // Bag (held in right hand)
+  if (bag && bag.id !== 'bag_none') add(txt(218, 338, bag.emoji, 28));
 
-  // Socks/shoes
-  if (sock && sock.id !== 'socks_none') {
-    const sf = colorFill(sock.color);
-    if (sock.id.startsWith('socks_')) {
-      add(svgEl('rect', { x:100, y:395, width:22, height:18, rx:8, fill:sf }));
-      add(svgEl('rect', { x:138, y:395, width:22, height:18, rx:8, fill:sf }));
+  // ── Stubby legs ──
+  add(svgEl('ellipse', { cx:108, cy:378, rx:16, ry:30, fill:fc }));
+  add(svgEl('ellipse', { cx:152, cy:378, rx:16, ry:30, fill:fc }));
+
+  // Feet / shoes
+  if (shoe && shoe.id !== 'shoes_none') {
+    if (shoe.color) {
+      const sf = colorFill(shoe.color);
+      add(svgEl('ellipse', { cx:106, cy:406, rx:20, ry:10, fill:sf }));
+      add(svgEl('ellipse', { cx:154, cy:406, rx:20, ry:10, fill:sf }));
     } else {
-      add(text(109, 418, sock.emoji, 22));
-      add(text(149, 418, sock.emoji, 22));
+      add(txt(105, 420, shoe.emoji, 22));
+      add(txt(153, 420, shoe.emoji, 22));
     }
+  } else {
+    // bare paws
+    add(furRing(108, 406, 12, 18, 5, fc, 0.7));
+    add(svgEl('ellipse', { cx:108, cy:406, rx:18, ry:10, fill:fc }));
+    add(furRing(152, 406, 12, 18, 5, fc, 0.7));
+    add(svgEl('ellipse', { cx:152, cy:406, rx:18, ry:10, fill:fc }));
   }
 
-  // Neck
-  add(svgEl('rect', { x:118, y:228, width:24, height:24, rx:8, fill:sc }));
-  if (neck && neck.id !== 'neck_none') add(text(130, 268, neck.emoji, 18));
+  // Neck join
+  add(svgEl('rect', { x:116, y:235, width:28, height:22, rx:10, fill:fc }));
+  if (neck && neck.id !== 'neck_none') add(txt(130, 275, neck.emoji, 18));
 
-  // ── Wig back ──
-  const hasWig = wig && wig.id !== 'wig_none' && wc;
-  if (hasWig) {
-    const ws = wig.style;
-    add(svgEl('ellipse', { cx:130, cy:175, rx: ws==='pigtails'?70:58, ry:70, fill:wc, opacity:.9 }));
-  }
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // HEAD — big round Labubu head
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // Fluffy fur halo behind head
+  add(furRing(130, 183, 60, 74, 14, fc, 0.5));
 
-  // ── Head ──
-  add(svgEl('ellipse', { cx:130, cy:180, rx:52, ry:56, fill:sc }));
-  // Ears
-  add(svgEl('ellipse', { cx:78,  cy:188, rx:14, ry:16, fill:sc }));
-  add(svgEl('ellipse', { cx:182, cy:188, rx:14, ry:16, fill:sc }));
-  add(svgEl('ellipse', { cx:78,  cy:188, rx:9,  ry:10, fill:'#f9a8c9' }));
-  add(svgEl('ellipse', { cx:182, cy:188, rx:9,  ry:10, fill:'#f9a8c9' }));
+  // ── Pointy ears (signature Labubu feature) ──
+  // Left ear — tall triangle with inner colour
+  add(svgEl('polygon', { points:'68,185  52,95  92,155', fill:fc }));
+  add(svgEl('polygon', { points:'72,178  60,108  88,158', fill:fc2 }));
 
-  // Blush
+  // Right ear
+  add(svgEl('polygon', { points:'192,185 208,95 168,155', fill:fc }));
+  add(svgEl('polygon', { points:'188,178 200,108 172,158', fill:fc2 }));
+
+  // Main head circle
+  add(svgEl('circle', { cx:130, cy:183, r:62, fill:fc }));
+
+  // ── Cheek blush ──
   if (blush) {
-    add(svgEl('ellipse', { cx:100, cy:200, rx:20, ry:12, fill:'url(#blushG)' }));
-    add(svgEl('ellipse', { cx:160, cy:200, rx:20, ry:12, fill:'url(#blushG)' }));
+    add(svgEl('ellipse', { cx:96,  cy:202, rx:22, ry:14, fill:'url(#blushG)' }));
+    add(svgEl('ellipse', { cx:164, cy:202, rx:22, ry:14, fill:'url(#blushG)' }));
   }
   if (mup?.glitter) {
-    add(text(95,  197, '✨', 10));
-    add(text(153, 197, '✨', 10));
+    add(txt(90, 200, '✨', 11)); add(txt(158, 200, '✨', 11));
   }
-
-  // Eyes
-  add(svgEl('ellipse', { cx:108, cy:182, rx:12, ry:13, fill:'white' }));
-  add(svgEl('ellipse', { cx:152, cy:182, rx:12, ry:13, fill:'white' }));
-  const eyeFill = mup?.eyes === 'rainbow' ? RAINBOW : ec;
-  add(svgEl('ellipse', { cx:108, cy:183, rx:8, ry:9, fill:eyeFill }));
-  add(svgEl('ellipse', { cx:152, cy:183, rx:8, ry:9, fill:eyeFill }));
-  add(svgEl('circle',  { cx:110, cy:183, r:4, fill:'#111' }));
-  add(svgEl('circle',  { cx:154, cy:183, r:4, fill:'#111' }));
-  add(svgEl('circle',  { cx:112, cy:180, r:2, fill:'white' }));
-  add(svgEl('circle',  { cx:156, cy:180, r:2, fill:'white' }));
-  // Lashes
-  add(svgEl('path', { d:'M96 172 Q100 168 104 172', stroke:'#333', 'stroke-width':2, fill:'none' }));
-  add(svgEl('path', { d:'M140 172 Q148 168 152 172', stroke:'#333', 'stroke-width':2, fill:'none' }));
-
-  // Nose
-  add(svgEl('ellipse', { cx:130, cy:196, rx:5, ry:4, fill:'#e8926a', opacity:.6 }));
-
-  // Smile
-  add(svgEl('path', { d:'M112 210 Q130 226 148 210', stroke:'#c96', 'stroke-width':3, fill:'none', 'stroke-linecap':'round' }));
-
-  // Lips
-  add(svgEl('ellipse', { cx:130, cy:214, rx:12, ry:5, fill:lips, opacity:.8 }));
-
-  // Star stickers
   if (mup?.stars) {
-    add(text(90,  197, '⭐', 12));
-    add(text(153, 197, '⭐', 12));
+    add(txt(90, 200, '⭐', 12)); add(txt(158, 200, '⭐', 12));
   }
 
-  // ── Wig front ──
-  if (hasWig) {
-    const ws = wig.style;
-    if (ws === 'curly') {
-      add(svgEl('ellipse', { cx:90,  cy:148, rx:24, ry:22, fill:wc }));
-      add(svgEl('ellipse', { cx:118, cy:138, rx:22, ry:20, fill:wc }));
-      add(svgEl('ellipse', { cx:148, cy:138, rx:22, ry:20, fill:wc }));
-      add(svgEl('ellipse', { cx:170, cy:148, rx:22, ry:22, fill:wc }));
-    } else if (ws === 'pigtails') {
-      add(svgEl('rect',    { x:80, y:140, width:100, height:28, rx:14, fill:wc }));
-      add(svgEl('ellipse', { cx:66,  cy:195, rx:16, ry:28, fill:wc, transform:'rotate(-10 66 195)' }));
-      add(svgEl('ellipse', { cx:194, cy:195, rx:16, ry:28, fill:wc, transform:'rotate(10 194 195)' }));
-      add(text(50,  175, '🎀', 18));
-      add(text(174, 175, '🎀', 18));
-    } else {
-      // straight / rainbow
-      add(svgEl('rect', { x:78,  y:140, width:104, height:30, rx:15, fill:wc }));
-      add(svgEl('rect', { x:70,  y:155, width:20,  height:50, rx:10, fill:wc }));
-      add(svgEl('rect', { x:170, y:155, width:20,  height:50, rx:10, fill:wc }));
-    }
+  // ── Eyes — large, round, expressive ──
+  // Whites
+  add(svgEl('ellipse', { cx:108, cy:178, rx:17, ry:20, fill:'white' }));
+  add(svgEl('ellipse', { cx:152, cy:178, rx:17, ry:20, fill:'white' }));
+  // Iris
+  const eyeFill = mup?.eyes === 'rainbow' ? RAINBOW : ec;
+  add(svgEl('circle', { cx:108, cy:180, r:12, fill:eyeFill }));
+  add(svgEl('circle', { cx:152, cy:180, r:12, fill:eyeFill }));
+  // Pupil
+  add(svgEl('circle', { cx:109, cy:181, r:7,  fill:'#0a0a0a' }));
+  add(svgEl('circle', { cx:153, cy:181, r:7,  fill:'#0a0a0a' }));
+  // Highlight specks
+  add(svgEl('circle', { cx:113, cy:176, r:3,  fill:'white' }));
+  add(svgEl('circle', { cx:157, cy:176, r:3,  fill:'white' }));
+  add(svgEl('circle', { cx:105, cy:185, r:1.5,fill:'white' }));
+  add(svgEl('circle', { cx:149, cy:185, r:1.5,fill:'white' }));
+
+  // Eye rainbow override colour patch
+  if (mup?.eyes === 'rainbow') {
+    add(svgEl('circle', { cx:108, cy:180, r:12, fill:RAINBOW, opacity:.85 }));
+    add(svgEl('circle', { cx:152, cy:180, r:12, fill:RAINBOW, opacity:.85 }));
+    add(svgEl('circle', { cx:109, cy:181, r:7,  fill:'#0a0a0a' }));
+    add(svgEl('circle', { cx:153, cy:181, r:7,  fill:'#0a0a0a' }));
+    add(svgEl('circle', { cx:113, cy:176, r:3,  fill:'white' }));
+    add(svgEl('circle', { cx:157, cy:176, r:3,  fill:'white' }));
   }
 
-  // ── Hat ──
+  // Upper lashes (thick arcs)
+  add(svgEl('path', { d:'M93 163 Q108 155 123 163', stroke:'#1a1a1a', 'stroke-width':3.5, fill:'none', 'stroke-linecap':'round' }));
+  add(svgEl('path', { d:'M137 163 Q152 155 167 163', stroke:'#1a1a1a', 'stroke-width':3.5, fill:'none', 'stroke-linecap':'round' }));
+
+  // ── Tiny round nose ──
+  add(svgEl('ellipse', { cx:130, cy:198, rx:6, ry:5, fill:'#b56a50', opacity:.7 }));
+  add(svgEl('ellipse', { cx:130, cy:197, rx:3, ry:2.5, fill:'#7a3a20', opacity:.5 }));
+
+  // ── The Labubu signature toothy grin ──
+  // Wide open mouth
+  add(svgEl('path', { d:'M104 212 Q130 238 156 212', fill:'#1a0808', stroke:'none' }));
+  // Row of little teeth
+  const teethY = 213;
+  const teethGap = 8;
+  const teethStart = 108;
+  const numTeeth = 6;
+  for (let i = 0; i < numTeeth; i++) {
+    add(svgEl('rect', {
+      x: teethStart + i * teethGap,
+      y: teethY,
+      width: 6, height: 9, rx: 2,
+      fill: 'white'
+    }));
+  }
+  // Bottom lip hint
+  if (lips) {
+    add(svgEl('path', { d:'M104 212 Q130 240 156 212', stroke:lips, 'stroke-width':3, fill:'none', 'stroke-linecap':'round', opacity:.8 }));
+  }
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // HAT (on top of head / between ears)
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   if (hat && hat.id !== 'hat_none') {
-    add(text(130, 136, hat.emoji, hat.id === 'hat_unicorn' ? 38 : 44));
+    add(txt(130, 126, hat.emoji, hat.id === 'hat_unicorn' ? 36 : 44));
   }
 
-  // ── Extra ──
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // EXTRAS
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   if (extra && extra.id !== 'extra_none') {
     if (extra.id === 'extra_glasses') {
-      add(text(130, 193, '😎', 30));
+      add(txt(130, 192, '😎', 32));
     } else if (extra.id === 'extra_wings') {
-      add(text(130, 290, extra.emoji, 32));
+      add(txt(130, 295, extra.emoji, 38));
     } else {
-      add(text(46, 310, extra.emoji, 32));
+      add(txt(44, 318, extra.emoji, 34));
     }
   }
 }
@@ -522,12 +541,12 @@ function buildSVG() {
 function buildTabs() {
   const tabs = document.getElementById('tabs');
   tabs.innerHTML = '';
-  const cats = [...Object.keys(ACCESSORIES), 'skin'];
+  const cats = [...Object.keys(ACCESSORIES), 'fur'];
   cats.forEach(key => {
     const btn = document.createElement('button');
     btn.className = 'tab-btn' + (key === activeTab ? ' active' : '');
-    const icon = key === 'skin' ? '🎨' : ACCESSORIES[key].icon;
-    const label = key === 'skin' ? 'Skin & Eyes' : ACCESSORIES[key].label;
+    const icon  = key === 'fur' ? '🎨' : ACCESSORIES[key].icon;
+    const label = key === 'fur' ? 'Fur & Eyes' : ACCESSORIES[key].label;
     btn.innerHTML = `<span class="tab-icon">${icon}</span><span class="tab-label">${label}</span>`;
     btn.onclick = () => { activeTab = key; buildTabs(); buildItems(); };
     tabs.appendChild(btn);
@@ -538,18 +557,16 @@ function buildItems() {
   const grid = document.getElementById('items-grid');
   grid.innerHTML = '';
 
-  if (activeTab === 'skin') {
-    // Skin tones
+  if (activeTab === 'fur') {
     const t = document.createElement('p');
-    t.className = 'section-title'; t.textContent = 'Skin Tone';
+    t.className = 'section-title'; t.textContent = 'Fur Colour';
     grid.appendChild(t);
     const sr = document.createElement('div'); sr.className = 'swatch-row';
-    SKIN_TONES.forEach(s => sr.appendChild(makeSwatch(s, outfit.skinTone, id => { outfit.skinTone = id; buildItems(); buildSVG(); })));
+    FUR_COLORS.forEach(f => sr.appendChild(makeSwatch(f, outfit.furColor, id => { outfit.furColor = id; buildItems(); buildSVG(); })));
     grid.appendChild(sr);
 
-    // Eye colors
     const t2 = document.createElement('p');
-    t2.className = 'section-title'; t2.textContent = 'Eye Color';
+    t2.className = 'section-title'; t2.textContent = 'Eye Colour';
     grid.appendChild(t2);
     const sr2 = document.createElement('div'); sr2.className = 'swatch-row';
     EYE_COLORS.forEach(e => sr2.appendChild(makeSwatch(e, outfit.eyeColor, id => { outfit.eyeColor = id; buildItems(); buildSVG(); })));
@@ -574,6 +591,7 @@ function makeSwatch(item, selectedId, onSelect) {
     btn.style.background = 'linear-gradient(135deg,#ff595e,#ffca3a,#8ac926,#1982c4,#6a4c93)';
   } else {
     btn.style.background = item.color;
+    if (item.id === 'fur_black') btn.style.border = '4px solid #888';
   }
   btn.onclick = () => onSelect(item.id);
   return btn;
@@ -585,9 +603,7 @@ function makeSwatch(item, selectedId, onSelect) {
 function startEditName() {
   const badge = document.getElementById('name-display');
   const cur = document.getElementById('name-text').textContent;
-  badge.innerHTML = `
-    <input id="name-input" maxlength="16" value="${cur}" />
-    <button class="name-save-btn" onclick="saveName()">Save</button>`;
+  badge.innerHTML = `<input id="name-input" maxlength="16" value="${cur}" /><button class="name-save-btn" onclick="saveName()">Save</button>`;
   const inp = document.getElementById('name-input');
   inp.focus(); inp.select();
   inp.addEventListener('keydown', e => { if (e.key === 'Enter') saveName(); });
@@ -596,15 +612,13 @@ function startEditName() {
 function saveName() {
   const val = (document.getElementById('name-input')?.value || '').trim() || 'Sparkle';
   document.getElementById('name-display').innerHTML =
-    `<span class="character-name" id="name-text">${val}</span>
-     <button class="icon-btn" onclick="startEditName()" title="Edit name">✏️</button>`;
+    `<span class="character-name" id="name-text">${val}</span><button class="icon-btn" onclick="startEditName()" title="Edit name">✏️</button>`;
 }
 
 function randomName() {
   const n = NAMES[Math.floor(Math.random() * NAMES.length)];
   document.getElementById('name-display').innerHTML =
-    `<span class="character-name" id="name-text">${n}</span>
-     <button class="icon-btn" onclick="startEditName()" title="Edit name">✏️</button>`;
+    `<span class="character-name" id="name-text">${n}</span><button class="icon-btn" onclick="startEditName()" title="Edit name">✏️</button>`;
 }
 
 // ─────────────────────────────────────────
@@ -619,13 +633,7 @@ function celebrate() {
     const p = document.createElement('div');
     p.className = 'confetti-piece';
     const sz = 8 + Math.random() * 10;
-    p.style.cssText = `
-      left:${Math.random()*100}%;
-      width:${sz}px; height:${sz}px;
-      background:${CONF_COLORS[i % CONF_COLORS.length]};
-      border-radius:${Math.random()>.5?'50%':'2px'};
-      animation-delay:${Math.random()*.8}s;
-    `;
+    p.style.cssText = `left:${Math.random()*100}%;width:${sz}px;height:${sz}px;background:${CONF_COLORS[i%CONF_COLORS.length]};border-radius:${Math.random()>.5?'50%':'2px'};animation-delay:${Math.random()*.8}s;`;
     c.appendChild(p);
   }
   setTimeout(() => c.innerHTML = '', 2000);
@@ -633,10 +641,10 @@ function celebrate() {
 
 function resetOutfit() {
   outfit = {
-    wigs:'wig_curly', hats:'hat_none', tops:'top_dress_pink',
-    necklaces:'neck_none', bags:'bag_none', socks:'socks_none',
-    makeup:'makeup_none', extras:'extra_none',
-    skinTone:'skin_2', eyeColor:'eye_brown',
+    hats:'hat_none', tops:'top_dress_pink',
+    necklaces:'neck_none', bags:'bag_none', shoes:'shoes_none',
+    makeup:'makeup_blush', extras:'extra_none',
+    furColor:'fur_cream', eyeColor:'eye_black',
   };
   buildItems(); buildSVG(); celebrate();
 }
