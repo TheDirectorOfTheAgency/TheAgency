@@ -1,0 +1,315 @@
+/* ═══════════════════════════════
+   LabooBoo Dress-Up App Styles
+   ═══════════════════════════════ */
+
+/* ── Layout ── */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  gap: 24px;
+  padding: 16px 24px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Header ── */
+.header {
+  text-align: center;
+  padding: 20px 16px 8px;
+  background: linear-gradient(135deg, #ff85a1 0%, #f9c74f 50%, #a29bfe 100%);
+  border-bottom: 4px solid #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.title {
+  font-family: 'Fredoka One', 'Comic Sans MS', cursive;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  color: white;
+  text-shadow: 3px 3px 0 #c03070, -1px -1px 0 #c03070;
+  letter-spacing: 2px;
+}
+
+.title-star {
+  display: inline-block;
+  animation: spin-star 3s linear infinite;
+}
+@keyframes spin-star { from { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.3); } to { transform: rotate(360deg) scale(1); } }
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #fff8;
+  font-weight: 700;
+  margin-top: 2px;
+  text-shadow: 1px 1px 2px #0003;
+}
+
+/* ── Stage column (left) ── */
+.stage-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 280px;
+}
+
+.name-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border-radius: 999px;
+  padding: 8px 20px;
+  box-shadow: 0 4px 16px #ff85a140;
+  border: 3px solid #ff85a1;
+}
+
+.character-name {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.5rem;
+  color: #b5179e;
+}
+
+.name-edit-btn, .name-save-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.name-edit-btn:hover { background: #ffe0f0; }
+.name-save-btn { background: #ff85a1; color: white; font-weight: 700; border-radius: 8px; }
+
+.name-input {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.3rem;
+  border: 2px solid #ff85a1;
+  border-radius: 8px;
+  padding: 4px 10px;
+  color: #b5179e;
+  width: 140px;
+  outline: none;
+}
+
+.character-wrap {
+  position: relative;
+  width: 260px;
+  background: white;
+  border-radius: 28px;
+  box-shadow: 0 8px 32px #b5179e22, 0 2px 8px #0001;
+  border: 4px solid #ffb3d9;
+  padding: 8px;
+  overflow: hidden;
+}
+
+.labooboo-stage { width: 100%; }
+.labooboo-svg { width: 100%; height: auto; display: block; }
+
+/* ── Stage action buttons ── */
+.stage-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  font-family: 'Fredoka One', cursive;
+  font-size: 1rem;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s;
+  box-shadow: 0 4px 10px #0002;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.btn:hover { transform: scale(1.07); box-shadow: 0 6px 16px #0003; }
+.btn:active { transform: scale(0.97); }
+
+.btn--random { background: linear-gradient(135deg, #ffd6e0, #f9c74f); color: #7b2d8b; }
+.btn--save   { background: linear-gradient(135deg, #a29bfe, #74b9ff); color: white; }
+.btn--reset  { background: linear-gradient(135deg, #ff85a1, #fd79a8); color: white; }
+
+/* ── Panel column (right) ── */
+.panel-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.panel {
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px #a29bfe22;
+  border: 3px solid #e8d5ff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 12px 12px 0;
+  background: linear-gradient(135deg, #ffe0f0, #e8d5ff);
+  border-bottom: 3px solid #f0d0ff;
+}
+
+.tab-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 12px;
+  border: 2px solid transparent;
+  border-radius: 14px 14px 0 0;
+  background: #fff8;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #7b2d8b;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  line-height: 1.2;
+}
+.tab-btn:hover { background: white; transform: translateY(-2px); }
+.tab-btn--active {
+  background: white;
+  border-color: #b5179e;
+  color: #b5179e;
+  transform: translateY(-2px);
+}
+.tab-btn span:first-child { font-size: 1.4rem; }
+.tab-label { font-size: 0.65rem; white-space: nowrap; }
+
+/* ── Items Grid ── */
+.items-grid {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 10px;
+  overflow-y: auto;
+  flex: 1;
+  max-height: 520px;
+}
+
+.item-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+  border: 3px solid #e8d5ff;
+  border-radius: 16px;
+  background: #fdf8ff;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Nunito', sans-serif;
+}
+.item-btn:hover {
+  border-color: #b5179e;
+  background: #ffe0f0;
+  transform: scale(1.06);
+}
+.item-btn--selected {
+  border-color: #b5179e;
+  background: linear-gradient(135deg, #ffe0f0, #e8d5ff);
+  box-shadow: 0 0 0 3px #ff85a160, 0 4px 12px #b5179e30;
+}
+
+.item-emoji { font-size: 2rem; line-height: 1; }
+.item-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #7b2d8b;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* ── Color Swatches ── */
+.section-title {
+  grid-column: 1 / -1;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  color: #b5179e;
+  margin: 4px 0;
+}
+
+.swatch-row {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.swatch-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 4px solid #e8d5ff;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 2px 6px #0002;
+}
+.swatch-btn:hover { transform: scale(1.18); border-color: #b5179e; }
+.swatch-btn--selected {
+  border-color: #b5179e;
+  box-shadow: 0 0 0 3px #ff85a160, 0 4px 12px #b5179e30;
+  transform: scale(1.12);
+}
+
+/* ── Confetti ── */
+.confetti-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -20px;
+  animation: fall 1.6s ease-in forwards;
+}
+@keyframes fall {
+  0%   { top: -20px; transform: rotate(0deg) scale(1); opacity: 1; }
+  80%  { opacity: 1; }
+  100% { top: 110%; transform: rotate(720deg) scale(0.7); opacity: 0; }
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 14px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 1.1rem;
+  color: #b5179e;
+  background: #fff6;
+  border-top: 3px dashed #ffb3d9;
+  letter-spacing: 1px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 680px) {
+  .main {
+    flex-direction: column;
+    align-items: center;
+    padding: 12px;
+  }
+  .stage-col { flex: none; }
+  .items-grid { max-height: 280px; }
+}
